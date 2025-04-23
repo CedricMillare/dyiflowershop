@@ -3,7 +3,7 @@ export function TopNav() {
             <nav className="sticky top-0 w-full flex items-center text-center justify-between p-4 bg-black text-white">
                 <div className="text-xl font-bold">Lcarpio's Flower Shop</div>
                 
-                <div className="flex gap-5 list-none absolute left-1/2 transform -translate-x-1/2">
+                <div className="flex-1 flex justify-center">
                     <div className="relative group">
                         <a href="#" className=" text-white px-4 py-2 rounded hover:bg-gray-500">Home</a>
                     </div>
@@ -21,6 +21,7 @@ export function TopNav() {
                         <a href="#" className=" text-white px-4 py-2 rounded hover:bg-gray-500">Orders</a>
                     </div>
                 </div>
+                <div className="w-32"></div>
 
             </nav>
 
