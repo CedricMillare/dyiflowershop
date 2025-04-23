@@ -1,9 +1,9 @@
 export function TopNav() {
     return (
-            <nav className="max-w flex items-center justify-between p-4">
+            <nav className="sticky top-0 w-full flex items-center text-center justify-between p-4 bg-black text-white">
                 <div className="text-xl font-bold">Lcarpio's Flower Shop</div>
                 
-                <div className="flex gap-5 list-none class">
+                <div className="flex gap-5 list-none absolute left-1/2 transform -translate-x-1/2">
                     <div className="relative group">
                         <a href="#" className=" text-white px-4 py-2 rounded hover:bg-gray-500">Home</a>
                     </div>
