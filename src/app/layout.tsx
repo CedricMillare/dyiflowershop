@@ -3,7 +3,6 @@ import "~/styles/globals.css";
 import { type Metadata } from "next";
 import { Geist } from "next/font/google";
 import { TopNav } from "./_components/topnav";
-import { SideNav } from "./_components/sidenav";
 import { Footer } from "./_components/footer";
 
 export const metadata: Metadata = {
@@ -24,7 +23,6 @@ export default function RootLayout({
     <html lang="en" className={`${geist.variable}`}>
       <body className="bg-black text-white">
         <TopNav />
-        <SideNav />
         {children}
         <Footer />
       </body>
