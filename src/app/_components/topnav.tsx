@@ -5,7 +5,7 @@ export function TopNav() {
                 
                 <div className="flex gap-4 list-none">
                     <div className="relative group">
-                        <a href={"Home"} className=" text-white px-4 py-2 rounded hover:bg-gray-500">Home</a>
+                        <a href={"/Home"} className=" text-white px-4 py-2 rounded hover:bg-gray-500">Home</a>
                     </div>
                     <div className="relative group">
                         <a href={"/Bouquet"} className=" text-white px-4 py-2 rounded hover:bg-gray-500">Bouquet</a>
