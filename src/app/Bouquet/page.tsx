@@ -1,45 +1,92 @@
-import Link from "next/link";
+"use client";
 
 export default function BouquetPage() {
+  const toggleMenu = () => {
+    const menu = document.getElementById("menu");
+    if (menu) {
+      menu.classList.toggle("hidden");
+    }
+  };
+
+  const bouquetRows = [
+    {
+      title: "Simple Bouquet",
+      items: [
+        { label: "1", image: "#" },
+        { label: "2", image: "#" },
+        { label: "3", image: "#" },
+      ],
+    },
+    {
+      title: "Premium Bouquet",
+      items: [
+        { label: "1", image: "#" },
+        { label: "2", image: "#" },
+        { label: "3", image: "#" },
+      ],
+    },
+    {
+      title: "Special Bouquet",
+      items: [
+        { label: "1", image: "#" },
+        { label: "2", image: "#" },
+        { label: "3", image: "#" },
+      ],
+    },
+  ];
+
   return (
-    <main className="flex min-h-screen flex-col items-center bg-gradient-to-b from-[#454446] to-[#1d1d22] text-white">
-      <div className="container flex flex-col items-center justify-center gap-12 px-4 py-16">
-        <h1 className="text-5xl font-extrabold tracking-tight text-white sm:text-[5rem]">
-         Bouquet
-        </h1>
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:gap-8">
-          <Link
-            className="flex max-w-xs flex-col gap-4 rounded-xl bg-white/10 p-4 text-white hover:bg-white/20"
-            href="#"
-            target="#"
-          >
-            <h3 className="text-2xl font-bold">Flowers:</h3>
-            <div className="text-lg">
-              All available flowers.
+    <div className="flex h-screen bg-gray-100 text-gray-900 p-6 space-x-6">
+      <div className="flex-1 flex flex-col items-center space-y-8">
+        {bouquetRows.map((row, rowIndex) => (
+          <div key={rowIndex} className="w-full max-w-5xl">
+            <h2 className="text-lg font-semibold mb-4">{row.title}</h2>
+            <div className="grid grid-cols-3 gap-4">
+              {row.items.map((item, index) => (
+                <a href={`/page-${rowIndex * 3 + index + 1}`} key={index}>
+                  <div className="flex flex-col items-center p-4 border border-gray-300 rounded-lg shadow-sm hover:shadow-md transition cursor-pointer bg-white">
+                    <img
+                      src={item.image}
+                      alt={item.label}
+                      className="w-24 h-24 rounded-full mb-2 object-cover"
+                    />
+                    <p className="text-center text-sm font-medium">{item.label}</p>
+                  </div>
+                </a>
+              ))}
             </div>
-          </Link>
-          <Link
-            className="flex max-w-xs flex-col gap-4 rounded-xl bg-white/10 p-4 text-white hover:bg-white/20"
-            href="#"
-            target="_blank"
-          >
-            <h3 className="text-2xl font-bold">Bouquet:</h3>
-            <div className="text-lg">
-              ------.
-            </div>
-          </Link>
-          <Link
-            className="flex max-w-xs flex-col gap-4 rounded-xl bg-white/10 p-4 text-white hover:bg-white/20"
-            href="#"
-            target="_blank"
-          >
-            <h3 className="text-2xl font-bold">Order:</h3>
-            <div className="text-lg">
-              -----.
-            </div>
-          </Link>
-        </div>
+          </div>
+        ))}
       </div>
-    </main>
+
+      <div className="w-40">
+        <button
+          onClick={toggleMenu}
+          className="bg-gray-700 hover:bg-gray-800 text-white font-semibold py-2 px-4 rounded w-full"
+        >
+          Edit
+        </button>
+        <ul
+          id="menu"
+          className="mt-2 bg-white text-black rounded shadow-lg hidden"
+        >
+          <li>
+            <a href="#" className="block px-4 py-2 hover:bg-gray-100">
+              Choice 1
+            </a>
+          </li>
+          <li>
+            <a href="#" className="block px-4 py-2 hover:bg-gray-100">
+              Choice 2
+            </a>
+          </li>
+          <li>
+            <a href="#" className="block px-4 py-2 hover:bg-gray-100">
+              Choice 3
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
   );
 }
