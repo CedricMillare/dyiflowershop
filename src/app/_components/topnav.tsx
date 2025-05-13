@@ -24,7 +24,7 @@ export function TopNav() {
                     </div>
                     <div className="relative group">
                         <a href={"/Flowers"} className=" text-white px-4 py-2 rounded hover:bg-gray-500">Flowers</a>
-                        <a href={"/Cart"} className=" text-white px-4 py-2 rounded hover:bg-gray-500">Cart</a>
+                        <a href={"/Orders"} className=" text-white px-4 py-2 rounded hover:bg-gray-500">Orders</a>
                     </div>
                 </div>
                 <div>
