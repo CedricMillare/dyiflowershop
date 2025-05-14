@@ -21,7 +21,7 @@ export default function FlowersPage() {
     if (field === "quantity") {
       const parsedValue = typeof value === "string" ? parseInt(value) : value;
       if (updated[index]) {
-        updated[index].quantity = Math.max(0, parsedValue || 0); // Enforce non-negative
+        updated[index].quantity = Math.max(0, parsedValue || 0);
       }
     } else {
       (updated[index] as any)[field] = value;
@@ -41,9 +41,10 @@ export default function FlowersPage() {
           {flowers.map((flower, index) => (
             <div
               key={index}
-              className="flex flex-col items-center gap-3 rounded-xl bg-white/10 p-4 text-white hover:bg-white/20"
+              className="flex items-center gap-6 rounded-xl bg-white/10 p-4 text-white hover:bg-white/20"
             >
-              <div className="w-24 h-24 border-2 border-gray-300 flex items-center justify-center bg-white/5">
+
+              <div className="w-45 h-30 border-2 border-gray-300 flex items-center justify-center bg-white/5">
                 {flower.image ? (
                   <img
                     src={flower.image}
@@ -55,39 +56,41 @@ export default function FlowersPage() {
                 )}
               </div>
 
-              <input
-                type="text"
-                value={flower.name}
-                onChange={(e) => handleChange(index, "name", e.target.value)}
-                className="w-full rounded bg-white/20 px-2 py-1 text-sm text-white focus:outline-none"
-                placeholder="Flower Name"
-              />
+              <div className="flex flex-col gap-3 w-full">
+                <input
+                  type="text"
+                  value={flower.name}
+                  onChange={(e) => handleChange(index, "name", e.target.value)}
+                  className="w-full rounded bg-white/20 px-2 py-1 text-sm text-white focus:outline-none"
+                  placeholder="Flower Name"
+                />
 
-              <input
-                type="number"
-                min="0"
-                value={flower.quantity}
-                onChange={(e) => handleChange(index, "quantity", e.target.value)}
-                className="w-full rounded bg-white/20 px-2 py-1 text-sm text-white focus:outline-none"
-                placeholder="Qty"
-              />
+                <input
+                  type="number"
+                  min="0"
+                  value={flower.quantity}
+                  onChange={(e) => handleChange(index, "quantity", e.target.value)}
+                  className="w-full rounded bg-white/20 px-2 py-1 text-sm text-white focus:outline-none"
+                  placeholder="Qty"
+                />
 
-              <input
-                type="text"
-                value={flower.image}
-                onChange={(e) => handleChange(index, "image", e.target.value)}
-                className="w-full rounded bg-white/20 px-2 py-1 text-sm text-white focus:outline-none"
-                placeholder="Image URL"
-              />
+                <input
+                  type="text"
+                  value={flower.image}
+                  onChange={(e) => handleChange(index, "image", e.target.value)}
+                  className="w-full rounded bg-white/20 px-2 py-1 text-sm text-white focus:outline-none"
+                  placeholder="Image URL"
+                />
 
-              <button
-                className="mt-1 rounded bg-black px-3 py-1 text-sm hover:bg-gray-800"
-                onClick={() =>
-                  alert(`Saved: ${flower.name}, Qty: ${flower.quantity}`)
-                }
-              >
-                Save
-              </button>
+                <button
+                  className="mt-1 rounded bg-black px-3 py-1 text-sm hover:bg-gray-800"
+                  onClick={() =>
+                    alert(`Saved: ${flower.name}, Qty: ${flower.quantity}`)
+                  }
+                >
+                  Save
+                </button>
+              </div>
             </div>
           ))}
         </div>
