@@ -21,7 +21,7 @@ export default function FlowersPage() {
     if (field === "quantity") {
       const parsedValue = typeof value === "string" ? parseInt(value) : value;
       if (updated[index]) {
-        updated[index].quantity = Math.max(0, parsedValue || 0);
+        updated[index].quantity = Math.max(0, parsedValue || 0); // Enforce non-negative
       }
     } else {
       (updated[index] as any)[field] = value;
