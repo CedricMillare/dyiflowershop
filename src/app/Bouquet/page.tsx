@@ -41,7 +41,7 @@ export default function BouquetPage() {
       <div className="flex-1 flex flex-col items-center space-y-8">
         {bouquetRows.map((row, rowIndex) => (
           <div key={rowIndex} className="w-full max-w-5xl">
-            <h2 className="text-lg font-semibold mb-4">{row.title}</h2>
+            <h2 className="text-lg font-semibold">{row.title}</h2>
             <div className="grid grid-cols-3 gap-4">
               {row.items.map((item, index) => (
                 <a href={`/page-${rowIndex * 3 + index + 1}`} key={index}>
