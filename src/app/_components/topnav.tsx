@@ -8,7 +8,7 @@ export function TopNav() {
                     <a href="/Home" className="text-white px-4 py-2 rounded hover:bg-gray-500">Home</a>
                 </div>
                 <div className="relative group">
-                    <a href="/Shop" className="text-white px-4 py-2 rounded hover:bg-gray-500">Shop</a>
+                    <a href="/Shop" className="text-white px-4 py-3 rounded hover:bg-gray-500">Shop</a>
                     <ul className="absolute hidden group-hover:block bg-white text-black rounded shadow-md mt-2">
                         <li><a href="/Bouquet" className="block px-4 py-2 hover:bg-gray-100">Bouquet</a></li>
                         <li><a href="/ForOccasions" className="block px-4 py-2 hover:bg-gray-100">For Occasions</a></li>

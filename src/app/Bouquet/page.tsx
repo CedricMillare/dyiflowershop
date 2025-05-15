@@ -1,4 +1,5 @@
 "use client";
+import Link from "next/link";
 
 export default function BouquetPage() {
   const toggleMenu = () => {
@@ -12,7 +13,7 @@ export default function BouquetPage() {
     {
       title: "Simple Bouquet",
       items: [
-        { label: "1", image: "#" },
+        { label: "1", image: "#"},
         { label: "2", image: "#" },
         { label: "3", image: "#" },
       ],
@@ -71,7 +72,7 @@ export default function BouquetPage() {
           className="mt-2 bg-white text-black rounded shadow-lg hidden"
         >
           <li>
-            <a href="#" className="block px-4 py-2 hover:bg-gray-100">
+            <a href="/EditFlower" className="block px-4 py-2 hover:bg-gray-100">
               Choice 1
             </a>
           </li>
