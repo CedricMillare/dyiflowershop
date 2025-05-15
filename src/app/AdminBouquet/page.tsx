@@ -14,12 +14,12 @@ interface Row {
 }
 
 export default function BouquetPage() {
-  const [rows, setRows] = useState<Row[] | null>(null); // Defer rendering until mounted
+  const [rows, updateRows] = useState<Row[] | null>(null); // Defer rendering until mounted
 
   useEffect(() => {
     // Set initial rows from bouquetRows after mount
-    setRows(bouquetRows.value);
-    bouquetRows.onChange(setRows);
+    updateRows(bouquetRows.value);
+    bouquetRows.onChange(updateRows);
   }, []);
 
   const toggleMenu = () => {
@@ -47,7 +47,7 @@ export default function BouquetPage() {
       >
         ╳
       </button>
-      <a href={`/${rowIndex}/${itemIndex}`}>
+      <a href={`AdminBouquet/Edit?row=${rowIndex}&item=${itemIndex}`}>
         <div className="flex flex-col items-center">
           <img
             src={item.image}
@@ -62,8 +62,21 @@ export default function BouquetPage() {
 
   const addRow = (row: Row, rowIndex: number) => (
     <div key={rowIndex} className="w-full max-w-5xl" data-id="row">
-      <div className="inline-block w-full">
-        <h2 className="text-lg font-semibold mb-4 float-left">{row.title}</h2>
+      <div className="inline-block align-middle w-full m-2">
+        <h2 className="text-lg font-semibold float-left">{row.title}</h2>
+        <button
+        className="bg-gray-700 hover:bg-gray-800 text-white font-semibold p-2 m-2 rounded w-auto float-right"
+        onClick={() => {
+          const newRows = [...(bouquetRows.value || [])];
+          const index = newRows.indexOf(row);
+          if (index > -1) {
+            newRows.splice(index, 1);
+          }
+          bouquetRows.set(newRows);
+        }}
+      >
+        Delete Row
+        </button>
         <button
           onClick={() => {
             const item = {
@@ -71,13 +84,29 @@ export default function BouquetPage() {
               image: "IMAGE",
             };
             const newRows = [...(bouquetRows.value || [])];
-            newRows[rowIndex]?.items.push(item);
+            newRows[newRows.indexOf(row)]?.items.push(item);
             bouquetRows.set(newRows);
           }}
-          className="bg-gray-700 hover:bg-gray-800 text-white font-semibold py-2 px-4 rounded w-50 float-right"
+          className="bg-gray-700 hover:bg-gray-800 text-white font-semibold p-2 m-2 rounded w-auto float-right"
         >
-          Add Bouquet
+          Add Item
         </button>
+        <button
+          onClick={() => {
+            const newRows = [...(bouquetRows.value || [])];
+            const index = newRows.indexOf(row);
+            var title = prompt("Change the title:");
+            if ((index > -1) && (title)) {
+              newRows[index].title = title;
+            }
+            bouquetRows.set(newRows);
+          }}
+          className="bg-gray-700 hover:bg-gray-800 text-white font-semibold p-2 m-2 rounded w-auto float-right"
+        >
+          Rename Row
+        </button>
+        
+        
       </div>
       <div className="grid grid-cols-3 gap-4">
         {row.items.map((item, index) => addItem(item, index, rowIndex))}
@@ -96,6 +125,24 @@ export default function BouquetPage() {
 
       <div className="w-40">
         <button
+              onClick={() => {
+                const row = { title: 'Row #'.concat(JSON.stringify((bouquetRows.value || []).length+1)), items: [] };
+                const newRows = [...(bouquetRows.value || [])];
+                newRows.push(row);
+                bouquetRows.set(newRows);
+              }}
+              className="bg-gray-700 hover:bg-gray-800 text-white font-semibold py-2 px-4 rounded w-auto"
+            >
+              Add Row
+        </button>
+        
+      </div>
+    </div>
+  );
+}
+
+/*
+        <button
           onClick={toggleMenu}
           className="bg-gray-700 hover:bg-gray-800 text-white font-semibold py-2 px-4 rounded w-full"
         >
@@ -108,14 +155,14 @@ export default function BouquetPage() {
           <li>
             <button
               onClick={() => {
-                const item = { label: "NEWITEM", image: "#" };
+                const row = { title: 'Row #'.concat(JSON.stringify((bouquetRows.value || []).length+1)), items: [] };
                 const newRows = [...(bouquetRows.value || [])];
-                newRows[0]?.items.push(item);
+                newRows.push(row);
                 bouquetRows.set(newRows);
               }}
               className="block px-4 py-2 hover:bg-gray-100"
             >
-              Add Bouquet
+              Add Row
             </button>
           </li>
           <li>
@@ -129,7 +176,4 @@ export default function BouquetPage() {
             </a>
           </li>
         </ul>
-      </div>
-    </div>
-  );
-}
+        */
