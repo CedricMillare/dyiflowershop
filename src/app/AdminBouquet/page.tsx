@@ -1,17 +1,7 @@
 'use client';
 
 import { useEffect, useState } from "react";
-import { bouquetRows } from "../bouquetRows.tsx";
-
-interface Item {
-  label: string;
-  image: string;
-}
-
-interface Row {
-  title: string;
-  items: Item[];
-}
+import { type Bouquet, type Row, bouquetRows } from "../bouquetRows.tsx";
 
 export default function BouquetPage() {
   const [rows, updateRows] = useState<Row[] | null>(null); // Defer rendering until mounted
@@ -29,16 +19,16 @@ export default function BouquetPage() {
     }
   };
 
-  const addItem = (item: Item, itemIndex: number, rowIndex: number) => (
+  const addItem = (bouquet: Bouquet, bouquetIndex: number, rowIndex: number) => (
     <div
-      key={itemIndex}
+      key={bouquetIndex}
       className="relative border border-gray-300 rounded-lg shadow-sm hover:shadow-md transition cursor-pointer bg-white"
     >
       <button
         className="bg-gray-700 absolute p-1 right-0 font-bold"
         onClick={() => {
           const newRows = [...(bouquetRows.value || [])];
-          const index = newRows[rowIndex].items.indexOf(item);
+          const index = newRows[rowIndex].items.indexOf(bouquet);
           if (index > -1) {
             newRows[rowIndex].items.splice(index, 1);
           }
@@ -47,14 +37,14 @@ export default function BouquetPage() {
       >
         ╳
       </button>
-      <a href={`AdminBouquet/Edit?row=${rowIndex}&item=${itemIndex}`}>
+      <a href={`AdminBouquet/Edit?rowIndex=${rowIndex}&itemIndex=${bouquetIndex}`}>
         <div className="flex flex-col items-center">
           <img
-            src={item.image}
-            alt={item.label}
+            src={bouquet.image}
+            alt={bouquet.label}
             className="w-24 h-24 rounded-full mb-2 object-cover"
           />
-          <p className="text-center text-sm font-medium">{item.label}</p>
+          <p className="text-center text-sm font-medium">{bouquet.label}</p>
         </div>
       </a>
     </div>
@@ -109,7 +99,7 @@ export default function BouquetPage() {
         
       </div>
       <div className="grid grid-cols-3 gap-4">
-        {row.items.map((item, index) => addItem(item, index, rowIndex))}
+        {row.items.map((bouquet, index) => addItem(bouquet, index, rowIndex))}
       </div>
     </div>
   );

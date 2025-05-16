@@ -2,6 +2,19 @@
 
 type Listener = (val: any[]) => void;
 
+export interface Bouquet {
+  label: string;
+  image: string;
+  price: number;
+  flowers: {[key : string]: number}; // flower name and quantity
+  consumables: string[]; //consumable name
+}
+
+export interface Row {
+  title: string;
+  items: Bouquet[];
+}
+
 class BouquetStore {
   private _value: any[] = [];
   private _listeners: Listener[] = [];
