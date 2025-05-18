@@ -1,18 +1,31 @@
+import { Facebook } from "lucide-react";
+
 export function Footer() {
-    return (
-        <footer className="bg-black text-white">
-            <div className="max-w mx-auto px-4 sm:px-6 lg:px-8">
-                
-                <div className="text-center pt-3">
-                    <h3>Contact Us</h3>
-                    <p>Email: example@flowershop.com</p>
-                    <p>Phone: +123 456 7890</p>
-                </div>
-        
-                <div className="pt-6 text-center">
-                    &copy; 2025 Lcarpio's Flower Shop. All rights reserved.
-                </div>
-            </div>
-        </footer>
-    );
+  return (
+    <footer className="bg-zinc-50 py-4 text-center">
+      {/* Logo + Social Icon */}
+      <div className="mt-12">
+        <img src="/Pictures/Lcarpio-logo.jpg" alt="" className="mx-auto h-20" />
+        <div className="mt-6 flex justify-center space-x-4">
+          <button className="rounded-full bg-[#a6c48a] p-2 text-white">
+            <a href="https://www.facebook.com/profile.php?id=100075981939873">
+              <Facebook />
+            </a>
+          </button>
+        </div>
+      </div>
+
+      {/* Bottom Note */}
+      <div className="mt-10 text-sm text-gray-500">
+        Lcarpio's Flower Shop © 2025.{" "}
+        <a href="#" className="hover:underline">
+          Terms of Use
+        </a>{" "}
+        and{" "}
+        <a href="#" className="hover:underline">
+          Privacy Policy
+        </a>
+      </div>
+    </footer>
+  );
 }

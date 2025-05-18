@@ -1,45 +1,46 @@
-import Link from "next/link";
+import { Button } from "~/components/ui/button";
 
 export default function HomePage() {
   return (
-    <main className="flex min-h-screen flex-col items-center bg-gradient-to-b from-[#454446] to-[#1d1d22] text-white">
-      <div className="container flex flex-col items-center justify-center gap-12 px-4 py-16">
-        <h1 className="text-5xl font-extrabold tracking-tight text-white sm:text-[5rem]">
-          DIY <span className="text-[#000000]">Flower</span> Shop
-        </h1>
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:gap-8">
-          <Link
-            className="flex max-w-xs flex-col gap-4 rounded-xl bg-white/10 p-4 text-white hover:bg-white/20"
-            href="#"
-            target="#"
-          >
-            <h3 className="text-2xl font-bold">Flowers:</h3>
-            <div className="text-lg">
-              All available flowers.
-            </div>
-          </Link>
-          <Link
-            className="flex max-w-xs flex-col gap-4 rounded-xl bg-white/10 p-4 text-white hover:bg-white/20"
-            href="#"
-            target="_blank"
-          >
-            <h3 className="text-2xl font-bold">Bouquet:</h3>
-            <div className="text-lg">
-              ------.
-            </div>
-          </Link>
-          <Link
-            className="flex max-w-xs flex-col gap-4 rounded-xl bg-white/10 p-4 text-white hover:bg-white/20"
-            href="#"
-            target="_blank"
-          >
-            <h3 className="text-2xl font-bold">Order:</h3>
-            <div className="text-lg">
-              -----.
-            </div>
-          </Link>
+    <div className="bg-zinc-50 font-sans text-[#333]">
+      {/* Hero Section */}
+      <section
+        className="relative h-[600px] bg-cover bg-center opacity-90"
+        style={{ backgroundImage: "url('/Pictures/Banner-2.jpg')" }}
+      >
+        <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/40 px-4 text-center">
+          <h1 className="mb-6 text-4xl font-bold text-white md:text-6xl">
+            Gorgeous Flowers for Your Special Event
+          </h1>
+          <a href={"/Shop"}>
+            <Button className="rounded bg-[#f6a29d] px-6 py-3 font-semibold text-white hover:bg-[#e69087]">
+              Shop Now
+            </Button>
+          </a>
         </div>
-      </div>
-    </main>
+      </section>
+
+      {/* About Section */}
+      <section className="bg-zinc-100 px-6 py-16">
+        <div className="mx-auto flex max-w-6xl flex-col items-center gap-12 md:flex-row">
+          <img
+            src="/Pictures/Lcarpio-logo.jpg"
+            alt="About"
+            className="rounded-m h-80 md:w-1/2"
+          />
+          <div>
+            <h2 className="mb-4 text-2xl font-semibold">
+              Welcome to Lcarpio's Flower Shop
+            </h2>
+            <p className="mb-4 leading-relaxed text-gray-700">
+              We sell different kinds of flowers for all occasions. Our flowers
+              are sourced from China and are guaranteed to be fresh and of the
+              highest quality. Whether you're looking for a bouquet for a
+              wedding or a gift for a loved one, we can create it for you
+            </p>
+          </div>
+        </div>
+      </section>
+    </div>
   );
 }

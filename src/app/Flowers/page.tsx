@@ -1,45 +1,65 @@
-import Link from "next/link";
+import React from "react";
 
-export default function FlowersPage() {
+const bouquets = [
+  {
+    id: 1,
+    name: "Bouquet 1",
+    quantity: 1,
+    image: "/Pictures/lily-casa.jpg",
+  },
+  {
+    id: 2,
+    name: "Bouquet 2",
+    quantity: 1,
+    image: "/Pictures/rose-chinese.jpg",
+  },
+  {
+    id: 3,
+    name: "Bouquet 3",
+    quantity: 1,
+    image: "/Pictures/rose-legendary.jpg",
+  },
+];
+
+export default function FlowerPage() {
   return (
-    <main className="flex min-h-screen flex-col items-center bg-gradient-to-b from-[#454446] to-[#1d1d22] text-white">
-      <div className="container flex flex-col items-center justify-center gap-12 px-4 py-16">
-        <h1 className="text-5xl font-extrabold tracking-tight text-white sm:text-[5rem]">
-            Flowers
-        </h1>
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:gap-8">
-          <Link
-            className="flex max-w-xs flex-col gap-4 rounded-xl bg-white/10 p-4 text-white hover:bg-white/20"
-            href="#"
-            target="#"
-          >
-            <h3 className="text-2xl font-bold">Flowers:</h3>
-            <div className="text-lg">
-              All available flowers.
+    <div>
+      <section
+        className="relative mb-12 h-[200px] bg-cover bg-center opacity-90"
+        style={{ backgroundImage: "url('/Pictures/Banner-1.jpg')" }}
+      >
+        <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/40 px-4 text-center">
+          <h1 className="mb-4 text-4xl font-bold text-white md:text-5xl">
+            Shop
+          </h1>
+          <p className="text-m text-white md:text-base">Home / Shop</p>
+        </div>
+      </section>
+
+      <div className="mx-auto max-w-5xl p-6">
+        <div className="grid grid-cols-1 gap-12 md:grid-cols-3">
+          {bouquets.map(({ id, name, quantity, image }) => (
+            <div
+              key={id}
+              className="grid grid-cols-2 items-center gap-6 rounded-lg bg-white p-6 shadow-sm"
+            >
+              <img
+                src={image}
+                alt={name}
+                className="h-40 w-full rounded-lg object-cover shadow-md"
+              />
+
+              <div className="flex flex-col items-start space-y-2 text-sm md:text-base">
+                <p className="font-semibold text-gray-800">{name}</p>
+
+                <div className="flex w-28 items-center justify-center rounded-lg border px-4 py-1">
+                  <span className="font-semibold">Quantity: {quantity}</span>
+                </div>
+              </div>
             </div>
-          </Link>
-          <Link
-            className="flex max-w-xs flex-col gap-4 rounded-xl bg-white/10 p-4 text-white hover:bg-white/20"
-            href="#"
-            target="_blank"
-          >
-            <h3 className="text-2xl font-bold">Bouquet:</h3>
-            <div className="text-lg">
-              ------.
-            </div>
-          </Link>
-          <Link
-            className="flex max-w-xs flex-col gap-4 rounded-xl bg-white/10 p-4 text-white hover:bg-white/20"
-            href="#"
-            target="_blank"
-          >
-            <h3 className="text-2xl font-bold">Order:</h3>
-            <div className="text-lg">
-              -----.
-            </div>
-          </Link>
+          ))}
         </div>
       </div>
-    </main>
+    </div>
   );
 }
