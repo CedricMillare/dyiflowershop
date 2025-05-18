@@ -20,6 +20,8 @@ export default function BouquetBuilder() {
 
         <div className="h-48 border-2 border-dashed border-gray-400 flex items-center justify-center rounded bg-white/10">
           <span className="text-gray-300">Drag or Add Pictures</span>
+          <UploadImageButton />
+          <UploadDialog />
         </div>
 
         <div className="grid grid-cols-2 gap-4">

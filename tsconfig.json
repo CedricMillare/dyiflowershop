@@ -37,6 +37,6 @@
     "**/*.cjs",
     "**/*.js",
     ".next/types/**/*.ts"
-, "src/app/AdminBouquet/bouquetRows.jsx"  ],
+, "src/app/Bouquet/bouquetRows.jsx"  ],
   "exclude": ["node_modules"]
 }

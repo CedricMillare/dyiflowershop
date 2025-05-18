@@ -1,34 +1,17 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { inventory } from "../inventory";
 
 export default function FlowersPage() {
-  const [flowers, setFlowers] = useState(
-    Array.from({ length: 9 }, (_, i) => ({
-      name: `Flower ${i + 1}`,
-      quantity: 0,
-      image: "",
-    }))
-  );
+    const [flowers, updateFlowers] = useState<{[key : string] : number} | null>({});
 
-  const handleChange = (
-    index: number,
-    field: string,
-    value: string | number
-  ) => {
-    const updated = [...flowers];
-
-    if (field === "quantity") {
-      const parsedValue = typeof value === "string" ? parseInt(value) : value;
-      if (updated[index]) {
-        updated[index].quantity = Math.max(0, parsedValue || 0);
-      }
-    } else {
-      (updated[index] as any)[field] = value;
-    }
-
-    setFlowers(updated);
-  };
+    useEffect(() => {
+          // Set initial rows from bouquetRows after mount
+          updateFlowers(inventory.flowers);
+        }, []);
+  
+      if (!flowers) return null;
 
   return (
     <main className="flex min-h-screen flex-col items-center bg-gradient-to-b from-[#454446] to-[#1d1d22] text-white">
@@ -38,55 +21,37 @@ export default function FlowersPage() {
         </h1>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
-          {flowers.map((flower, index) => (
+          {Object.entries(flowers).map(([flower, qty]) => (
             <div
-              key={index}
+              key={flower}
               className="flex items-center gap-6 rounded-xl bg-white/10 p-4 text-white hover:bg-white/20"
             >
 
-              <div className="w-45 h-30 border-2 border-gray-300 flex items-center justify-center bg-white/5">
-                {flower.image ? (
-                  <img
-                    src={flower.image}
-                    alt={`Flower ${index + 1}`}
-                    className="object-cover w-full h-full"
-                  />
-                ) : (
-                  <span className="text-sm text-gray-300">No Image</span>
-                )}
-              </div>
-
               <div className="flex flex-col gap-3 w-full">
-                <input
-                  type="text"
-                  value={flower.name}
-                  onChange={(e) => handleChange(index, "name", e.target.value)}
-                  className="w-full rounded bg-white/20 px-2 py-1 text-sm text-white focus:outline-none"
-                  placeholder="Flower Name"
-                />
+                <label className="block mb-1 text-sm font-medium">{flower}</label>
 
                 <input
                   type="number"
                   min="0"
-                  value={flower.quantity}
-                  onChange={(e) => handleChange(index, "quantity", e.target.value)}
+                  value={flowers[flower]}
+                  onChange={(e) => {
+                    const newFlowers = {...flowers};
+                    newFlowers[flower] = Number(e.target.value)
+                    updateFlowers(newFlowers)
+                  }}
                   className="w-full rounded bg-white/20 px-2 py-1 text-sm text-white focus:outline-none"
                   placeholder="Qty"
                 />
 
-                <input
-                  type="text"
-                  value={flower.image}
-                  onChange={(e) => handleChange(index, "image", e.target.value)}
-                  className="w-full rounded bg-white/20 px-2 py-1 text-sm text-white focus:outline-none"
-                  placeholder="Image URL"
-                />
+    
 
                 <button
                   className="mt-1 rounded bg-black px-3 py-1 text-sm hover:bg-gray-800"
-                  onClick={() =>
-                    alert(`Saved: ${flower.name}, Qty: ${flower.quantity}`)
-                  }
+                  onClick={() => {
+                    console.log(flowers[flower]);
+                    inventory.setFlower(flower, flowers[flower]);
+                    alert(`Saved: ${flower}, Qty: ${flowers[flower]}`);
+                  }}
                 >
                   Save
                 </button>

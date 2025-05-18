@@ -1,7 +1,9 @@
 'use client';
 import { use, useEffect, useState } from "react";
-import { type Bouquet, type Row, bouquetRows } from "../../bouquetRows.tsx";
-import { inventory } from "../../inventory.tsx";
+import { type Bouquet, type Row, bouquetRows } from "../../bouquetRows";
+import { inventory } from "../../inventory";
+import { UploadDialog } from "../../_components/uploadDialog";
+
 export default function EditPage({searchParams}) {
     const { rowIndex, itemIndex } : {[key : string]: number} = use(searchParams);
     const [rows, updateRows] = useState<Row[] | null>(null); // Defer rendering until mounted
@@ -10,7 +12,7 @@ export default function EditPage({searchParams}) {
     const [tempLabel, setTempLabel] = useState<string | null>(null);
     const [tempFlowers, setTempFlowers] = useState<{[key : string] : number} | null>({});
     const [tempConsumables, setTempConsumables] = useState<string[] | null>([]);
-   
+    var checked = false;
     const [selectedFlower, setSelectedFlower] = useState<string | null>(null);
     const [selectedFlowerQty, setSelectedFlowerQty] = useState<number | null>(null);
     const [selectedConsumable, setSelectedConsumable] = useState<string | null>(null);
@@ -20,7 +22,10 @@ export default function EditPage({searchParams}) {
         console.log(rowIndex);
         
         const currentItem = bouquetRows.value[rowIndex].items[itemIndex]
+        setSelectedFlower(Object.keys(inventory.flowers)[0]);
+        setSelectedConsumable(inventory.consumables[0]);
         setTempPrice(currentItem.price || 0);
+        checked = currentItem.doNotDisplay || false;
         setTempImage(currentItem.image || "");
         setTempLabel(currentItem.label || "Sample Bouquet");
         setTempFlowers(currentItem.flowers || {});
@@ -44,9 +49,10 @@ return (
             <input
               defaultValue={tempLabel}
               onChange={(e) => setTempLabel(e.target.value)}
-              className="w-full rounded bg-white/20 px-2 py-1 text-white text-sm"
+              className="w-full rounded bg-zinc-600 px-2 py-1 text-white text-sm"
             />
           </div>
+          <UploadDialog/ >
         </div>
 
         <div className="grid grid-cols-2 gap-4">
@@ -68,7 +74,7 @@ return (
                     e.target.value = newVal;
                     setTempFlowers(newDict);
                   }}
-                  className="w-full rounded bg-white/20 px-2 py-1 text-white text-sm"
+                  className="w-full rounded bg-zinc-600 px-2 py-1 text-white text-sm"
                   placeholder="Qty"
                 />
          
@@ -92,11 +98,10 @@ return (
               onChange={(e) => {
                 setSelectedFlower((e.target.value !== undefined) ? e.target.value : null);
               }}
-              className="w-full rounded bg-white/20 px-2 py-1 text-white text-sm"
+              className="w-full rounded bg-zinc-600 px-2 py-1 text-white text-sm"
             >
-              <option value={undefined} className="text-gray-400">Select Flower</option>
               {Object.keys(inventory.flowers).map((flower, flowerIndex) => (
-                <option value={flower}>{flower}</option>
+                <option key={flowerIndex} value={flower}>{flower}</option>
               ))}
             </select>
               <button
@@ -142,10 +147,10 @@ return (
               <select
               value={selectedConsumable || 0}
               onChange={(e) => setSelectedConsumable((e.target.value !== undefined) ? e.target.value : null)}
-              className="w-full rounded bg-white/20 px-2 py-1 text-white text-sm"
+              className="w-full rounded bg-zinc-600 px-2 py-1 text-white text-sm"
             >
               {inventory.consumables.map((consumable, consumableIndex) => (
-                <option value={consumable}>{consumable}</option>
+                <option key={consumableIndex} value={consumable}>{consumable}</option>
               ))}
             </select>
 
@@ -176,7 +181,7 @@ return (
                 setTempPrice(val);
                 e.target.value = val;
               }}
-              className="w-32 rounded bg-white/20 px-2 py-1 text-white text-sm"
+              className="w-32 rounded bg-zinc-600 px-2 py-1 text-white text-sm"
             />
           </div>
           <button
@@ -189,7 +194,9 @@ return (
               currentItem.price = tempPrice;
               currentItem.flowers = tempFlowers;
               currentItem.consumables = tempConsumables;
+              currentItem.doNotDisplay = checked;
               bouquetRows.set(newRows);
+              alert("Saved changes!");
             }
             }
           >
@@ -203,6 +210,10 @@ return (
             id="hideDisplay"
             defaultChecked={rows[rowIndex].items[itemIndex].doNotDisplay || false}
             className="w-4 h-4"
+            onChange={(e) => {
+              const element = document.getElementById("hideDisplay") as HTMLInputElement; 
+              checked = element.checked || false;
+            }}
           />
           <label htmlFor="hideDisplay" className="text-sm">
             Do not display
@@ -219,7 +230,7 @@ return (
           <select
             value={occasion}
             onChange={(e) => setOccasion(e.target.value)}
-            className="w-full rounded bg-white/20 px-2 py-1 text-white text-sm"
+            className="w-full rounded bg-zinc-600 px-2 py-1 text-white text-sm"
           >
             <option value="">Select Occasion</option>
             <option value="Funeral">For Funeral</option>
@@ -236,7 +247,7 @@ return (
               min="0"
               value={selectedFlowerQty || 0}
               onChange={(e) => setSelectedFlowerQty(Number((e.target.value !== undefined) ? e.target.value : null))}
-              className="w-full rounded bg-white/20 px-2 py-1 text-white text-sm"
+              className="w-full rounded bg-zinc-600 px-2 py-1 text-white text-sm"
               placeholder="Qty"
             />
           </div>

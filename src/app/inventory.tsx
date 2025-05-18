@@ -58,14 +58,22 @@ class inventoryClass {
     const newQuantity = (this.flowers[flower]||0)-quantity;
     this._flowers[flower]=newQuantity;
     this._listeners.forEach((listener) => listener(this._flowers));
+    localStorage.setItem("Flowers", JSON.stringify(this._flowers));
   }
 
   addFlower(flower: string, quantity: number) {
     const newQuantity = (this.flowers[flower]||0)+quantity;
     this._flowers[flower]=newQuantity;
     this._listeners.forEach((listener) => listener(this._flowers));
+    localStorage.setItem("Flowers", JSON.stringify(this._flowers));
   }
 
+  setFlower(flower: string, quantity: number) {
+    const newQuantity = quantity;
+    this._flowers[flower]=newQuantity;
+    this._listeners.forEach((listener) => listener(this._flowers));
+    localStorage.setItem("Flowers", JSON.stringify(this._flowers));
+  }
   onChange(listener: Listener) {
     this._listeners.push(listener);
   }
