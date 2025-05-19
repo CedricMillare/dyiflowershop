@@ -63,10 +63,11 @@ export default function CartView() {
               <span>Total:</span>
               <span className="text-rose-500">₱300</span>
             </div>
-
-            <button className="mt-4 w-full bg-rose-300 py-2 font-semibold text-white hover:bg-rose-400">
-              PROCEED TO CHECKOUT
-            </button>
+            <a href={"/CheckOut"}>
+              <button className="mt-4 w-full bg-rose-300 py-2 font-semibold text-white hover:bg-rose-400">
+                PROCEED TO CHECKOUT
+              </button>
+            </a>
           </div>
         </div>
       </div>
