@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 
-export default function BouquetPage() {
+export default function oldBouquetPage() {
   const toggleMenu = () => {
     const menu = document.getElementById("menu");
     if (menu) {
