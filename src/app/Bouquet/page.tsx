@@ -3,29 +3,49 @@
 import { useEffect, useState } from "react";
 import { type Bouquet, type Row, bouquetRows } from "../bouquetRows";
 
-
 export default function BouquetPage() {
   const [rows, updateRows] = useState<Row[] | null>(null); // Defer rendering until mounted
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     // 1. Load data from API on mount
     async function loadFromApi() {
       try {
         const res = await fetch("/api/bouquets/load");
+        if (res.status === 401) {
+          setError("Please log in as an admin to view this page");
+          return;
+        }
         if (!res.ok) throw new Error("Failed to fetch bouquets");
         const data: Row[] = await res.json();
-        bouquetRows.set(data);  // update global store
-        updateRows(data);       // update local state
+        // Ensure each row has an items array
+        const validData = data.map(row => ({
+          ...row,
+          items: row.items || []
+        }));
+        bouquetRows.set(validData);  // update global store
+        updateRows(validData);       // update local state
       } catch (err) {
         console.error("Error loading bouquets:", err);
+        setError("Failed to load bouquets. Please try again later.");
         // fallback: load from localStorage store if available
-        updateRows(bouquetRows.value);
+        const fallbackData = bouquetRows.value?.map(row => ({
+          ...row,
+          items: row.items || []
+        })) || [];
+        updateRows(fallbackData);
       }
     }
     loadFromApi();
 
     // 2. Subscribe to bouquetRows changes to update local state
-    bouquetRows.onChange(updateRows);
+    bouquetRows.onChange((newRows) => {
+      const validRows = newRows?.map(row => ({
+        ...row,
+        items: row.items || []
+      })) || [];
+      updateRows(validRows);
+    });
 
   }, []);
 
@@ -47,7 +67,7 @@ export default function BouquetPage() {
         className="bg-gray-700 absolute p-1 right-0 font-bold"
         onClick={() => {
           const newRows = [...(bouquetRows.value || [])];
-          const index = newRows[rowIndex].items.indexOf(bouquet);
+          const index = newRows[rowIndex]?.items?.indexOf(bouquet);
           if (index > -1) {
             newRows[rowIndex].items.splice(index, 1);
           }
@@ -67,7 +87,7 @@ export default function BouquetPage() {
       >
         <div className="flex flex-col items-center">
           <img
-            src={bouquet.image}
+            src={bouquet.image || "/placeholder-image.png"}
             alt={bouquet.label}
             className="w-24 h-24 rounded-full mb-2 object-cover"
           />
@@ -88,7 +108,25 @@ export default function BouquetPage() {
           className="bg-gray-700 hover:bg-gray-800 text-white font-semibold p-2 m-2 rounded w-auto float-right"
           onClick={async () => {
             try {
-              console.log('Deleting row:', row);
+              console.log('Attempting to delete row:', row);
+              
+              // For unsaved rows, just update the frontend state
+              if (!row.id) {
+                console.log('Row appears to be unsaved, removing from frontend state');
+                const newRows = [...(bouquetRows.value || [])];
+                const index = newRows.findIndex(r => r.title === row.title);
+                if (index > -1) {
+                  newRows.splice(index, 1);
+                  bouquetRows.set(newRows);
+                  console.log('Row removed from frontend state');
+                } else {
+                  console.log('Row not found in frontend state');
+                }
+                return;
+              }
+
+              // For saved rows, make the API call
+              console.log('Row appears to be saved, making API call');
               const res = await fetch("/api/bouquets/delete-row", {
                 method: "DELETE",
                 headers: {
@@ -99,30 +137,22 @@ export default function BouquetPage() {
 
               if (!res.ok) {
                 const errorData = await res.json();
-                console.error('Delete failed:', errorData);
-                throw new Error("Failed to delete row");
+                throw new Error(errorData.details || 'Failed to delete row');
               }
 
               // Update local state after successful deletion
               const newRows = [...(bouquetRows.value || [])];
-              const index = newRows.indexOf(row);
+              const index = newRows.findIndex(r => r.id === row.id);
               if (index > -1) {
                 newRows.splice(index, 1);
                 bouquetRows.set(newRows);
+                console.log('Saved row removed from frontend state');
+              } else {
+                console.log('Saved row not found in frontend state');
               }
             } catch (err) {
               console.error("Error deleting row:", err);
-              // For local-only rows, just remove from state
-              if (!row.id) {
-                const newRows = [...(bouquetRows.value || [])];
-                const index = newRows.indexOf(row);
-                if (index > -1) {
-                  newRows.splice(index, 1);
-                  bouquetRows.set(newRows);
-                }
-              } else {
-                alert("Failed to delete row from database");
-              }
+              alert(err instanceof Error ? err.message : "Failed to delete row");
             }
           }}
         >
@@ -131,14 +161,17 @@ export default function BouquetPage() {
         <button
           onClick={() => {
             const item = {
-              label: `Bouquet #${row.items.length + 1}`,
-              image: "IMAGE",
+              label: `Bouquet #${(row.items || []).length + 1}`,
+              image: "/placeholder-image.png",
               price: 0,
               flowers: {},
               consumables: []
             };
             const newRows = [...(bouquetRows.value || [])];
-            newRows[newRows.indexOf(row)]?.items.push(item);
+            if (!newRows[rowIndex].items) {
+              newRows[rowIndex].items = [];
+            }
+            newRows[rowIndex].items.push(item);
             bouquetRows.set(newRows);
           }}
           className="bg-gray-700 hover:bg-gray-800 text-white font-semibold p-2 m-2 rounded w-auto float-right"
@@ -147,13 +180,22 @@ export default function BouquetPage() {
         </button>
         <button
           onClick={() => {
+            const newTitle = prompt("Change the title:");
+            if (!newTitle) return; // User cancelled
+
             const newRows = [...(bouquetRows.value || [])];
-            const index = newRows.indexOf(row);
-            var title = prompt("Change the title:");
-            if ((index > -1) && (title)) {
-              newRows[index].title = title;
+            const index = newRows.findIndex(r => r.id === row.id || r.title === row.title);
+            
+            if (index > -1) {
+              newRows[index] = {
+                ...newRows[index],
+                title: newTitle
+              };
+              bouquetRows.set(newRows);
+              console.log('Row renamed:', { oldTitle: row.title, newTitle });
+            } else {
+              console.log('Row not found for renaming');
             }
-            bouquetRows.set(newRows);
           }}
           className="bg-gray-700 hover:bg-gray-800 text-white font-semibold p-2 m-2 rounded w-auto float-right"
         >
@@ -161,13 +203,24 @@ export default function BouquetPage() {
         </button>
       </div>
       <div className="grid grid-cols-3 gap-4">
-        {row.items.map((bouquet, index) => addItem(bouquet, index, rowIndex))}
+        {(row.items || []).map((bouquet, index) => addItem(bouquet, index, rowIndex))}
       </div>
     </div>
   );
 
   // Don't render until `rows` is set on client
   if (!rows) return null;
+
+  if (error) {
+    return (
+      <div className="flex h-screen items-center justify-center bg-gray-100">
+        <div className="text-center">
+          <h2 className="text-2xl font-bold text-red-600 mb-4">Error</h2>
+          <p className="text-gray-700">{error}</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex h-screen bg-gray-100 text-gray-900 p-6 space-x-6">
@@ -178,7 +231,10 @@ export default function BouquetPage() {
       <div className="w-40 flex flex-col space-y-4">
         <button
           onClick={() => {
-            const row = { title: 'Row #'.concat(JSON.stringify((bouquetRows.value || []).length+1)), items: [] };
+            const row = { 
+              title: 'Row #'.concat(JSON.stringify((bouquetRows.value || []).length+1)), 
+              items: [] 
+            };
             const newRows = [...(bouquetRows.value || [])];
             newRows.push(row);
             bouquetRows.set(newRows);
@@ -192,6 +248,7 @@ export default function BouquetPage() {
         <button
           onClick={async () => {
             try {
+              console.log('Saving bouquets:', bouquetRows.value);
               const res = await fetch("/api/bouquets/save", {
                 method: "POST",
                 headers: {
@@ -200,19 +257,29 @@ export default function BouquetPage() {
                 body: JSON.stringify(bouquetRows.value),
               });
               
-              if (!res.ok) throw new Error("Failed to save bouquets");
+              if (!res.ok) {
+                const errorData = await res.json();
+                throw new Error(errorData.details || 'Failed to save bouquets');
+              }
               
               // After successful save, reload from database
               const loadRes = await fetch("/api/bouquets/load");
-              if (!loadRes.ok) throw new Error("Failed to fetch bouquets");
+              if (!loadRes.ok) {
+                const errorData = await loadRes.json();
+                throw new Error(errorData.details || 'Failed to fetch bouquets');
+              }
               const data: Row[] = await loadRes.json();
-              bouquetRows.set(data);
-              updateRows(data);
+              const validData = data.map(row => ({
+                ...row,
+                items: row.items || []
+              }));
+              bouquetRows.set(validData);
+              updateRows(validData);
               
               alert("Bouquets saved and reloaded successfully!");
             } catch (err) {
               console.error("Error saving bouquets:", err);
-              alert("Failed to save bouquets to database");
+              alert(err instanceof Error ? err.message : "Failed to save bouquets to database");
             }
           }}
           className="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded w-auto"
@@ -227,8 +294,12 @@ export default function BouquetPage() {
               const res = await fetch("/api/bouquets/load");
               if (!res.ok) throw new Error("Failed to fetch bouquets");
               const data: Row[] = await res.json();
-              bouquetRows.set(data);
-              updateRows(data);
+              const validData = data.map(row => ({
+                ...row,
+                items: row.items || []
+              }));
+              bouquetRows.set(validData);
+              updateRows(validData);
             } catch (err) {
               console.error("Error loading bouquets:", err);
               alert("Failed to load bouquets from server");
