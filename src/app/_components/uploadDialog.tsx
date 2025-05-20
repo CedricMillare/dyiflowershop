@@ -34,13 +34,13 @@ import { Upload } from "lucide-react";
 const formSchema = z.object({
   imageName: z
     .string()
-    .min(5, {
-      message: "Username must be at least 5 characters.",
+    .min(1, {
+      message: "Image name is required.",
     })
     .max(50),
 });
 
-export function UploadDialog() {
+export function UploadDialog({ onImageUpload }: { onImageUpload?: (imageUrl: string) => void }) {
   const [open, setOpen] = useState(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -52,9 +52,7 @@ export function UploadDialog() {
 
   const router = useRouter();
   const inputRef = useRef<HTMLInputElement>(null);
-  const [selectedImageName, setSelectedImageName] = useState<string | null>(
-    null,
-  );
+  const [selectedImageName, setSelectedImageName] = useState<string | null>(null);
   const [selectedImageUrl, setSelectedImageUrl] = useState<string | null>(null);
 
   const handleImageSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -64,8 +62,11 @@ export function UploadDialog() {
       if (file.type.startsWith("image/")) {
         setSelectedImageName(file.name);
         setSelectedImageUrl(URL.createObjectURL(file));
+        // Set the image name in the form
+        form.setValue("imageName", file.name);
       } else {
         setSelectedImageUrl(null);
+        toast.error(<span className="text-lg">Please select an image file</span>);
       }
     } else {
       setSelectedImageName(null);
@@ -85,14 +86,21 @@ export function UploadDialog() {
         },
       );
     },
-    onUploadError() {
+    onUploadError: (error) => {
+      console.error('Upload error:', error);
       toast.dismiss("upload-begin");
-      toast.error(<span className="text-lg">Upload Error</span>);
+      toast.error(<span className="text-lg">Upload Error: {error.message}</span>);
     },
-    onClientUploadComplete() {
+    onClientUploadComplete: (res) => {
+      console.log('Upload complete:', res);
       toast.dismiss("upload-begin");
-      toast.success(<span className="text-lg">Upload Complete!</span>);
-      router.refresh();
+      if (res?.[0]?.url) {
+        toast.success(<span className="text-lg">Upload Complete!</span>);
+        onImageUpload?.(res[0].url);
+        setOpen(false);
+      } else {
+        toast.error(<span className="text-lg">No URL returned from upload</span>);
+      }
     },
   });
 
@@ -103,15 +111,26 @@ export function UploadDialog() {
     }
 
     const selectedImage = Array.from(inputRef.current.files);
-    await startUpload(selectedImage);
-    setSelectedImageName(null);
-    setSelectedImageUrl(null);
+    try {
+      await startUpload(selectedImage);
+    } catch (error) {
+      console.error('Upload error:', error);
+      toast.error(<span className="text-lg">Failed to upload image</span>);
+    }
   };
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
-    setOpen(false);
-    await handleImageUpload();
+    if (!inputRef.current?.files?.length) {
+      toast.warning(<span className="text-lg">Please select an image first</span>);
+      return;
+    }
+
+    try {
+      await startUpload(Array.from(inputRef.current.files));
+    } catch (error) {
+      console.error('Upload error:', error);
+      toast.error(<span className="text-lg">Failed to upload image</span>);
+    }
   }
 
   return (
@@ -121,24 +140,26 @@ export function UploadDialog() {
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Upload Image</DialogTitle>
+          <DialogTitle>Upload Bouquet Image</DialogTitle>
           <DialogDescription>
-            Upload images to your own profile. Click save when you're done.
+            Upload an image for your bouquet. Click submit when you're done.
           </DialogDescription>
         </DialogHeader>
         {/* Upload Button */}
         <div className="flex flex-col gap-2">
-          {selectedImageUrl != null && (
-            <div>
+          {selectedImageUrl && (
+            <div className="relative w-full aspect-video">
               <img
-                src={selectedImageUrl!}
-                className="w-full rounded-md object-cover"
+                src={selectedImageUrl}
+                alt="Selected bouquet"
+                className="w-full h-full rounded-md object-cover"
               />
             </div>
           )}
           <div className="item-center flex gap-2">
             <Button variant="outline" onClick={() => inputRef.current?.click()}>
-              <Upload />
+              <Upload className="mr-2 h-4 w-4" />
+              Select Image
             </Button>
             <input
               type="file"
@@ -147,8 +168,8 @@ export function UploadDialog() {
               accept="image/*"
               onChange={handleImageSelect}
             />
-            {setSelectedImageName != null && (
-              <div>Selected Images: {selectedImageName}</div>
+            {selectedImageName && (
+              <div className="text-sm text-gray-500">Selected: {selectedImageName}</div>
             )}
           </div>
         </div>
@@ -161,14 +182,16 @@ export function UploadDialog() {
                 <FormItem>
                   <FormLabel>Image Name</FormLabel>
                   <FormControl>
-                    <Input placeholder="shadcn" {...field} />
+                    <Input placeholder="Enter image name" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
             <DialogFooter>
-              <Button type="submit">Submit</Button>
+              <Button type="submit" disabled={!selectedImageUrl}>
+                Upload Image
+              </Button>
             </DialogFooter>
           </form>
         </Form>

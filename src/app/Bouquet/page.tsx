@@ -1,17 +1,34 @@
 'use client';
 
 import { useEffect, useState } from "react";
-import { type Bouquet, type Row, bouquetRows } from "../bouquetRows.tsx";
+import { type Bouquet, type Row, bouquetRows } from "../bouquetRows";
 
 export default function BouquetPage() {
   const [rows, updateRows] = useState<Row[] | null>(null); // Defer rendering until mounted
 
   useEffect(() => {
-    // Set initial rows from bouquetRows after mount
-    updateRows(bouquetRows.value);
+    // 1. Load data from API on mount
+    async function loadFromApi() {
+      try {
+        const res = await fetch("/api/bouquets/load");
+        if (!res.ok) throw new Error("Failed to fetch bouquets");
+        const data: Row[] = await res.json();
+        bouquetRows.set(data);  // update global store
+        updateRows(data);       // update local state
+      } catch (err) {
+        console.error("Error loading bouquets:", err);
+        // fallback: load from localStorage store if available
+        updateRows(bouquetRows.value);
+      }
+    }
+    loadFromApi();
+
+    // 2. Subscribe to bouquetRows changes to update local state
     bouquetRows.onChange(updateRows);
+
   }, []);
 
+  // Toggle menu helper (unchanged)
   const toggleMenu = () => {
     const menu = document.getElementById("menu");
     if (menu) {
@@ -19,9 +36,10 @@ export default function BouquetPage() {
     }
   };
 
+  // addItem, addRow - unchanged except minor fix to addItem key
   const addItem = (bouquet: Bouquet, bouquetIndex: number, rowIndex: number) => (
     <div
-      key={bouquetIndex}
+      key={`${rowIndex}-${bouquetIndex}`} // safer unique key
       className="relative border border-gray-300 rounded-lg shadow-sm hover:shadow-md transition cursor-pointer bg-white"
     >
       <button
@@ -55,23 +73,47 @@ export default function BouquetPage() {
       <div className="inline-block align-middle w-full m-2">
         <h2 className="text-lg font-semibold float-left">{row.title}</h2>
         <button
-        className="bg-gray-700 hover:bg-gray-800 text-white font-semibold p-2 m-2 rounded w-auto float-right"
-        onClick={() => {
-          const newRows = [...(bouquetRows.value || [])];
-          const index = newRows.indexOf(row);
-          if (index > -1) {
-            newRows.splice(index, 1);
-          }
-          bouquetRows.set(newRows);
-        }}
-      >
-        Delete Row
+          className="bg-gray-700 hover:bg-gray-800 text-white font-semibold p-2 m-2 rounded w-auto float-right"
+          onClick={async () => {
+            try {
+              console.log('Deleting row:', row);
+              const res = await fetch("/api/bouquets/delete-row", {
+                method: "DELETE",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ rowId: row.id }),
+              });
+
+              if (!res.ok) {
+                const errorData = await res.json();
+                console.error('Delete failed:', errorData);
+                throw new Error("Failed to delete row");
+              }
+
+              // Update local state after successful deletion
+              const newRows = [...(bouquetRows.value || [])];
+              const index = newRows.indexOf(row);
+              if (index > -1) {
+                newRows.splice(index, 1);
+                bouquetRows.set(newRows);
+              }
+            } catch (err) {
+              console.error("Error deleting row:", err);
+              alert("Failed to delete row from database");
+            }
+          }}
+        >
+          Delete Row
         </button>
         <button
           onClick={() => {
             const item = {
               label: `Bouquet #${row.items.length + 1}`,
               image: "IMAGE",
+              price: 0,
+              flowers: {},
+              consumables: []
             };
             const newRows = [...(bouquetRows.value || [])];
             newRows[newRows.indexOf(row)]?.items.push(item);
@@ -95,8 +137,6 @@ export default function BouquetPage() {
         >
           Rename Row
         </button>
-        
-        
       </div>
       <div className="grid grid-cols-3 gap-4">
         {row.items.map((bouquet, index) => addItem(bouquet, index, rowIndex))}
@@ -113,57 +153,63 @@ export default function BouquetPage() {
         {rows.map((row, rowIndex) => addRow(row, rowIndex))}
       </div>
 
-      <div className="w-40">
+      <div className="w-40 flex flex-col space-y-4">
         <button
-              onClick={() => {
-                const row = { title: 'Row #'.concat(JSON.stringify((bouquetRows.value || []).length+1)), items: [] };
-                const newRows = [...(bouquetRows.value || [])];
-                newRows.push(row);
-                bouquetRows.set(newRows);
-              }}
-              className="bg-gray-700 hover:bg-gray-800 text-white font-semibold py-2 px-4 rounded w-auto"
-            >
-              Add Row
+          onClick={() => {
+            const row = { title: 'Row #'.concat(JSON.stringify((bouquetRows.value || []).length+1)), items: [] };
+            const newRows = [...(bouquetRows.value || [])];
+            newRows.push(row);
+            bouquetRows.set(newRows);
+          }}
+          className="bg-gray-700 hover:bg-gray-800 text-white font-semibold py-2 px-4 rounded w-auto"
+        >
+          Add Row
         </button>
-        
+
+        {/* Save to DB button */}
+        <button
+          onClick={async () => {
+            try {
+              const res = await fetch("/api/bouquets/save", {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify(bouquetRows.value),
+              });
+              
+              if (!res.ok) throw new Error("Failed to save bouquets");
+              
+              alert("Bouquets saved successfully!");
+            } catch (err) {
+              console.error("Error saving bouquets:", err);
+              alert("Failed to save bouquets to database");
+            }
+          }}
+          className="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded w-auto"
+        >
+          Save to DB
+        </button>
+
+        {/* Load from DB button */}
+        <button
+          onClick={async () => {
+            try {
+              const res = await fetch("/api/bouquets/load");
+              if (!res.ok) throw new Error("Failed to fetch bouquets");
+              const data: Row[] = await res.json();
+              bouquetRows.set(data);
+              updateRows(data);
+            } catch (err) {
+              console.error("Error loading bouquets:", err);
+              alert("Failed to load bouquets from server");
+            }
+          }}
+          className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded w-auto"
+        >
+          Load from DB
+        </button>
       </div>
     </div>
   );
 }
-
-/*
-        <button
-          onClick={toggleMenu}
-          className="bg-gray-700 hover:bg-gray-800 text-white font-semibold py-2 px-4 rounded w-full"
-        >
-          Edit
-        </button>
-        <ul
-          id="menu"
-          className="mt-2 bg-white text-black rounded shadow-lg hidden"
-        >
-          <li>
-            <button
-              onClick={() => {
-                const row = { title: 'Row #'.concat(JSON.stringify((bouquetRows.value || []).length+1)), items: [] };
-                const newRows = [...(bouquetRows.value || [])];
-                newRows.push(row);
-                bouquetRows.set(newRows);
-              }}
-              className="block px-4 py-2 hover:bg-gray-100"
-            >
-              Add Row
-            </button>
-          </li>
-          <li>
-            <a href="#" className="block px-4 py-2 hover:bg-gray-100">
-              Choice 2
-            </a>
-          </li>
-          <li>
-            <a href="#" className="block px-4 py-2 hover:bg-gray-100">
-              Choice 3
-            </a>
-          </li>
-        </ul>
-        */
