@@ -3,29 +3,11 @@ import { index, pgTableCreator, integer, varchar, real, timestamp, primaryKey } 
 
 export const createTable = pgTableCreator((name) => `dyiflowershop_${name}`);
 
-<<<<<<< HEAD
-export const image = createTable(
-  "image",
-  (d) => ({
-    id: d.integer().primaryKey().generatedByDefaultAsIdentity(),
-    name: d.varchar({ length: 256 }).notNull(),
-    url: d.varchar({ length: 1024 }).notNull(),
-    userId: d.varchar({ length: 256 }).notNull(),
-    createdAt: d
-      .timestamp({ withTimezone: true })
-      .default(sql`CURRENT_TIMESTAMP`)
-      .notNull(),
-    updatedAt: d.timestamp({ withTimezone: true }).$onUpdate(() => new Date()),
-  }),
-  (t) => [index("image_name_idx").on(t.name)],
-);
-=======
 // Rows
 export const rows = createTable("rows", (d) => ({
   id: d.integer().primaryKey().generatedByDefaultAsIdentity(),
   title: d.varchar({ length: 256 }).notNull(),
 }));
->>>>>>> bccc1bd1e75696105f1abf238816f01f066158b6
 
 // Bouquets
 export const bouquets = createTable("bouquets", (d) => ({
@@ -37,23 +19,6 @@ export const bouquets = createTable("bouquets", (d) => ({
   updated_at: d.timestamp({ withTimezone: true }).$onUpdate(() => new Date()),
 }));
 
-<<<<<<< HEAD
-export const images = createTable(
-  "images",
-  (d) => ({
-    id: d.integer().primaryKey().generatedByDefaultAsIdentity(),
-    name: d.varchar({ length: 256 }).notNull(),
-    url: d.varchar({ length: 1024 }).notNull(),
-    userId: d.varchar({ length: 256 }).notNull(),
-    createdAt: d
-      .timestamp({ withTimezone: true })
-      .default(sql`CURRENT_TIMESTAMP`)
-      .notNull(),
-    updatedAt: d.timestamp({ withTimezone: true }).$onUpdate(() => new Date()),
-  }),
-  (t) => [index("images_name_idx").on(t.name)],
-);
-=======
 // Row-Bouquet join table (many-to-many)
 export const rowBouquets = createTable("row_bouquets", (d) => ({
   row_id: d.integer().notNull(),
@@ -72,4 +37,3 @@ export const bouquetConsumables = createTable("bouquet_consumables", (d) => ({
   bouquet_id: d.integer().notNull(),
   consumable_name: d.varchar({ length: 256 }).notNull(),
 }), (t) => [primaryKey(t.bouquet_id, t.consumable_name)]);
->>>>>>> bccc1bd1e75696105f1abf238816f01f066158b6
