@@ -1,19 +1,15 @@
 'use client';
 
-type Listener = (val: {[key : string] : number}) => void;
-const Flowers : string[] = [
-  "Lily",
-  "Rose",
-  "Tulip",
-  "Chrysanthemum",
-]
-
-const Consumables : string[] = [
+const Consumables = [
   "Wrapper",
+  "Silk",
   "Ribbon",
   "Sequins",
-  "Silk"
+  "Glitter"
 ]
+
+type Listener = (val: {[key : string] : number}) => void;
+
 class inventoryClass {
   private _flowers: { [key : string] : number } = {};
   private _listeners: Listener[] = [];
@@ -25,22 +21,29 @@ class inventoryClass {
     }
   }
 
-  private init() {
+  private async init() {
     if (this._initialized) return;
-    const stored = localStorage.getItem("Flowers");
-    this._flowers = Flowers.reduce((result:{[key : string] : number}, flower:string) => {
-      if (result[flower] == undefined) {
-        result[flower] = 0;
-      }
-      return result;
-    }, (stored ? JSON.parse(stored) : this._flowers));
+    
+    try {
+      const res = await fetch("/api/inventory");
+      if (!res.ok) throw new Error("Failed to fetch inventory");
+      
+      const data = await res.json();
+      
+      // Initialize flowers directly from database data
+      this._flowers = data.flowers.reduce((result: {[key: string]: number}, flower: any) => {
+        result[flower.name] = flower.quantity;
+        return result;
+      }, {});
 
-    Object.keys(this._flowers).forEach((key:string) => {
-      if (Flowers.indexOf(key) == -1) {
-        delete this._flowers[key];
-      }
-    });
-    this._initialized = true;
+      this._initialized = true;
+      this._listeners.forEach((listener) => listener(this._flowers));
+    } catch (error) {
+      console.error("Error initializing inventory:", error);
+      // Fallback to empty inventory
+      this._flowers = {};
+      this._initialized = true;
+    }
   }
 
   get flowers() {
@@ -54,26 +57,42 @@ class inventoryClass {
     return Consumables;
   }
 
-  removeFlower(flower: string, quantity: number) {
+  async removeFlower(flower: string, quantity: number) {
     const newQuantity = (this.flowers[flower]||0)-quantity;
-    this._flowers[flower]=newQuantity;
-    this._listeners.forEach((listener) => listener(this._flowers));
-    localStorage.setItem("Flowers", JSON.stringify(this._flowers));
+    await this.setFlower(flower, newQuantity);
   }
 
-  addFlower(flower: string, quantity: number) {
+  async addFlower(flower: string, quantity: number) {
     const newQuantity = (this.flowers[flower]||0)+quantity;
-    this._flowers[flower]=newQuantity;
-    this._listeners.forEach((listener) => listener(this._flowers));
-    localStorage.setItem("Flowers", JSON.stringify(this._flowers));
+    await this.setFlower(flower, newQuantity);
   }
 
-  setFlower(flower: string, quantity: number) {
-    const newQuantity = quantity;
-    this._flowers[flower]=newQuantity;
-    this._listeners.forEach((listener) => listener(this._flowers));
-    localStorage.setItem("Flowers", JSON.stringify(this._flowers));
+  async setFlower(flower: string, quantity: number) {
+    try {
+      const res = await fetch("/api/inventory", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ name: flower, quantity }),
+      });
+
+      if (!res.ok) throw new Error("Failed to update inventory");
+
+      const data = await res.json();
+      // Update flowers with the latest data from the database
+      this._flowers = data.flowers.reduce((result: {[key: string]: number}, flower: any) => {
+        result[flower.name] = flower.quantity;
+        return result;
+      }, {});
+      
+      this._listeners.forEach((listener) => listener(this._flowers));
+    } catch (error) {
+      console.error("Error updating flower quantity:", error);
+      throw error;
+    }
   }
+
   onChange(listener: Listener) {
     this._listeners.push(listener);
   }

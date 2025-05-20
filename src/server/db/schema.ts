@@ -1,5 +1,5 @@
 import { sql } from "drizzle-orm";
-import { index, pgTableCreator, integer, varchar, real, timestamp, primaryKey } from "drizzle-orm/pg-core";
+import { index, pgTableCreator, integer, varchar, real, timestamp, primaryKey, pgTable, serial, text } from "drizzle-orm/pg-core";
 
 export const createTable = pgTableCreator((name) => `dyiflowershop_${name}`);
 
@@ -37,3 +37,14 @@ export const bouquetConsumables = createTable("bouquet_consumables", (d) => ({
   bouquet_id: d.integer().notNull(),
   consumable_name: d.varchar({ length: 256 }).notNull(),
 }), (t) => [primaryKey(t.bouquet_id, t.consumable_name)]);
+
+export const flowers = pgTable('flowers', {
+  id: serial('id').primaryKey(),
+  name: text('name').notNull().unique(),
+  quantity: integer('quantity').notNull().default(0),
+});
+
+export const consumables = pgTable('consumables', {
+  id: serial('id').primaryKey(),
+  name: text('name').notNull().unique(),
+});

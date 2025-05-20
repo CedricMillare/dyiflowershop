@@ -55,7 +55,15 @@ export default function BouquetPage() {
       >
         ╳
       </button>
-      <a href={`${window.location.href}/Edit?rowIndex=${rowIndex}&itemIndex=${bouquetIndex}`}>
+      <a 
+        href={bouquet.id ? `${window.location.href}/Edit?rowIndex=${rowIndex}&itemIndex=${bouquetIndex}` : '#'}
+        onClick={(e) => {
+          if (!bouquet.id) {
+            e.preventDefault();
+            alert("Please save your changes to the database before editing bouquets.");
+          }
+        }}
+      >
         <div className="flex flex-col items-center">
           <img
             src={bouquet.image}
@@ -63,6 +71,9 @@ export default function BouquetPage() {
             className="w-24 h-24 rounded-full mb-2 object-cover"
           />
           <p className="text-center text-sm font-medium">{bouquet.label}</p>
+          {!bouquet.id && (
+            <span className="text-xs text-red-500 mt-1">(Unsaved)</span>
+          )}
         </div>
       </a>
     </div>
@@ -100,7 +111,17 @@ export default function BouquetPage() {
               }
             } catch (err) {
               console.error("Error deleting row:", err);
-              alert("Failed to delete row from database");
+              // For local-only rows, just remove from state
+              if (!row.id) {
+                const newRows = [...(bouquetRows.value || [])];
+                const index = newRows.indexOf(row);
+                if (index > -1) {
+                  newRows.splice(index, 1);
+                  bouquetRows.set(newRows);
+                }
+              } else {
+                alert("Failed to delete row from database");
+              }
             }
           }}
         >
@@ -180,7 +201,14 @@ export default function BouquetPage() {
               
               if (!res.ok) throw new Error("Failed to save bouquets");
               
-              alert("Bouquets saved successfully!");
+              // After successful save, reload from database
+              const loadRes = await fetch("/api/bouquets/load");
+              if (!loadRes.ok) throw new Error("Failed to fetch bouquets");
+              const data: Row[] = await loadRes.json();
+              bouquetRows.set(data);
+              updateRows(data);
+              
+              alert("Bouquets saved and reloaded successfully!");
             } catch (err) {
               console.error("Error saving bouquets:", err);
               alert("Failed to save bouquets to database");
