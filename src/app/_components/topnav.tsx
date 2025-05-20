@@ -16,8 +16,7 @@ export function TopNav() {
             </div>
 
             <div className="flex gap-2">
-                <button className="text-white px-4 py-2 rounded hover:bg-gray-500">Sign In</button>
-                <button className="text-white px-4 py-2 rounded hover:bg-gray-500">Sign Up</button>
+                <button className="text-white px-4 py-2 rounded hover:bg-gray-500">Log out</button>
             </div>
         </nav>
     );
