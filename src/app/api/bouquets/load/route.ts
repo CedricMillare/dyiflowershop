@@ -8,73 +8,33 @@ import {
 } from "~/server/db/schema";
 import { eq, inArray } from "drizzle-orm";
 import { NextResponse } from "next/server";
+import { getAuth } from "@clerk/nextjs/server";
+import { clerkClient } from "@clerk/nextjs/server";
+
+// Helper function to check if user is admin
+async function isAdmin() {
+  const { userId } = getAuth();
+  if (!userId) return false;
+
+  // Get user's public metadata from Clerk
+  const user = await clerkClient.users.getUser(userId);
+  return user.publicMetadata.role === "admin";
+}
 
 export async function GET() {
   try {
-    // Step 1: Fetch all rows
-    const allRows = await db.select().from(rows);
-
-    // Step 2: For each row, fetch its bouquets
-    const result = [];
-    for (const row of allRows) {
-      // Get the bouquet links for this row
-      const bouquetLinks = await db
-        .select()
-        .from(rowBouquets)
-        .where(eq(rowBouquets.row_id, row.id));
-
-      if (bouquetLinks.length === 0) {
-        result.push({
-          id: row.id,
-          title: row.title,
-          items: [],
-        });
-        continue;
-      }
-
-      // Get the bouquet IDs
-      const bouquetIds = bouquetLinks.map((link) => link.bouquet_id);
-
-      // Get the bouquets
-      const bouquetsData = await db
-        .select()
-        .from(bouquets)
-        .where(inArray(bouquets.id, bouquetIds));
-
-      const fullBouquets = [];
-
-      // For each bouquet, get its flowers and consumables
-      for (const bq of bouquetsData) {
-        const flowers = await db
-          .select()
-          .from(bouquetFlowers)
-          .where(eq(bouquetFlowers.bouquet_id, bq.id));
-
-        const consumables = await db
-          .select()
-          .from(bouquetConsumables)
-          .where(eq(bouquetConsumables.bouquet_id, bq.id));
-
-        fullBouquets.push({
-          id: bq.id,
-          label: bq.label,
-          image: bq.image,
-          price: bq.price,
-          flowers: Object.fromEntries(flowers.map((f) => [f.flower_name, f.quantity])),
-          consumables: consumables.map((c) => c.consumable_name),
-        });
-      }
-
-      result.push({
-        id: row.id,
-        title: row.title,
-        items: fullBouquets,
-      });
+    // Check if user is admin
+    if (!await isAdmin()) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    return NextResponse.json(result);
+    console.log('Fetching bouquets data...');
+    const bouquetsData = await db.select().from(bouquets);
+    console.log('Bouquets data:', bouquetsData);
+    
+    return NextResponse.json(bouquetsData);
   } catch (error) {
-    console.error('Error loading bouquets:', error);
-    return NextResponse.json({ error: 'Failed to load bouquets' }, { status: 500 });
+    console.error('Error fetching bouquets:', error);
+    return NextResponse.json({ error: 'Failed to fetch bouquets' }, { status: 500 });
   }
 }
