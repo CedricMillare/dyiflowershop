@@ -3,6 +3,7 @@
 type Listener = (val: any[]) => void;
 
 export interface Bouquet {
+  id?: number;  // Optional since new bouquets won't have an ID until saved
   label: string;
   image: string;
   price: number;
@@ -11,6 +12,7 @@ export interface Bouquet {
 }
 
 export interface Row {
+  id?: number;  // Optional since new rows won't have an ID until saved
   title: string;
   items: Bouquet[];
 }
