@@ -1,4 +1,12 @@
-import { Button } from "~/components/ui/button"
+"use client";
+
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { useUploadThing } from "~/utils/uploadthing";
+import { toast } from "sonner";
+
+import { Button } from "~/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -7,25 +15,164 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "~/components/ui/dialog"
+} from "~/components/ui/dialog";
+
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "~/components/ui/form";
+import { Input } from "~/components/ui/input";
+import { useRouter } from "next/navigation";
+import { useRef, useState } from "react";
+import { Upload } from "lucide-react";
+
+const formSchema = z.object({
+  imageName: z
+    .string()
+    .min(5, {
+      message: "Username must be at least 5 characters.",
+    })
+    .max(50),
+});
 
 export function UploadDialog() {
+  const [open, setOpen] = useState(false);
+
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      imageName: "",
+    },
+  });
+
+  const router = useRouter();
+  const inputRef = useRef<HTMLInputElement>(null);
+  const [selectedImageName, setSelectedImageName] = useState<string | null>(
+    null,
+  );
+  const [selectedImageUrl, setSelectedImageUrl] = useState<string | null>(null);
+
+  const handleImageSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+
+    if (file) {
+      if (file.type.startsWith("image/")) {
+        setSelectedImageName(file.name);
+        setSelectedImageUrl(URL.createObjectURL(file));
+      } else {
+        setSelectedImageUrl(null);
+      }
+    } else {
+      setSelectedImageName(null);
+      setSelectedImageUrl(null);
+    }
+  };
+
+  const { startUpload } = useUploadThing("imageUploader", {
+    onUploadBegin: () => {
+      toast(
+        <div className="flex items-center gap-2">
+          <span className="text-lg">Uploading...</span>
+        </div>,
+        {
+          duration: 100000,
+          id: "upload-begin",
+        },
+      );
+    },
+    onUploadError() {
+      toast.dismiss("upload-begin");
+      toast.error(<span className="text-lg">Upload Error</span>);
+    },
+    onClientUploadComplete() {
+      toast.dismiss("upload-begin");
+      toast.success(<span className="text-lg">Upload Complete!</span>);
+      router.refresh();
+    },
+  });
+
+  const handleImageUpload = async () => {
+    if (!inputRef.current?.files?.length) {
+      toast.warning(<span className="text-lg">No file selected</span>);
+      return;
+    }
+
+    const selectedImage = Array.from(inputRef.current.files);
+    await startUpload(selectedImage);
+    setSelectedImageName(null);
+    setSelectedImageUrl(null);
+  };
+
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    console.log(values);
+    setOpen(false);
+    await handleImageUpload();
+  }
+
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline" className="bg-zinc-500">Change Display Image</Button>
+        <Button variant="outline">Upload Image</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Upload New Image</DialogTitle>
+          <DialogTitle>Upload Image</DialogTitle>
+          <DialogDescription>
+            Upload images to your own profile. Click save when you're done.
+          </DialogDescription>
         </DialogHeader>
-        <div className="grid gap-4 py-4">
-    
+        {/* Upload Button */}
+        <div className="flex flex-col gap-2">
+          {selectedImageUrl != null && (
+            <div>
+              <img
+                src={selectedImageUrl!}
+                className="w-full rounded-md object-cover"
+              />
+            </div>
+          )}
+          <div className="item-center flex gap-2">
+            <Button variant="outline" onClick={() => inputRef.current?.click()}>
+              <Upload />
+            </Button>
+            <input
+              type="file"
+              ref={inputRef}
+              className="sr-only"
+              accept="image/*"
+              onChange={handleImageSelect}
+            />
+            {setSelectedImageName != null && (
+              <div>Selected Images: {selectedImageName}</div>
+            )}
+          </div>
         </div>
-        <DialogFooter>
-          <Button type="submit">Save changes</Button>
-        </DialogFooter>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+            <FormField
+              control={form.control}
+              name="imageName"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Image Name</FormLabel>
+                  <FormControl>
+                    <Input placeholder="shadcn" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <DialogFooter>
+              <Button type="submit">Submit</Button>
+            </DialogFooter>
+          </form>
+        </Form>
       </DialogContent>
     </Dialog>
-  )
+  );
 }
