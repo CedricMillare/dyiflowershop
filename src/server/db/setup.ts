@@ -2,6 +2,8 @@ import { readFileSync } from 'fs';
 import { join } from 'path';
 import postgres from 'postgres';
 import { env } from '~/env';
+import { db } from "./index";
+import { orders } from "./schema";
 
 const setupDatabase = async () => {
   const sql = postgres(env.DATABASE_URL);
@@ -42,8 +44,31 @@ const setupDatabase = async () => {
   }
 };
 
+async function main() {
+  try {
+    console.log("Creating orders table...");
+    await db.execute(`
+      CREATE TABLE IF NOT EXISTS dyiflowershop_orders (
+        id SERIAL PRIMARY KEY,
+        user_email VARCHAR(256) NOT NULL,
+        total_price REAL NOT NULL,
+        items JSONB NOT NULL,
+        status VARCHAR(50) NOT NULL DEFAULT 'pending',
+        created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMPTZ
+      );
+    `);
+    console.log("Orders table created successfully!");
+  } catch (error) {
+    console.error("Error creating orders table:", error);
+    process.exit(1);
+  }
+}
+
 setupDatabase().catch((err) => {
   console.error('Setup failed!');
   console.error(err);
   process.exit(1);
-}); 
+});
+
+main(); 

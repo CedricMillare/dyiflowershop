@@ -1,5 +1,5 @@
 import { sql } from "drizzle-orm";
-import { index, pgTableCreator, integer, varchar, real, timestamp, primaryKey, pgTable, serial, text } from "drizzle-orm/pg-core";
+import { index, pgTableCreator, integer, varchar, real, timestamp, primaryKey, pgTable, serial, text, jsonb } from "drizzle-orm/pg-core";
 
 export const createTable = pgTableCreator((name) => `dyiflowershop_${name}`);
 
@@ -47,4 +47,15 @@ export const flowers = pgTable('flowers', {
 export const consumables = pgTable('consumables', {
   id: serial('id').primaryKey(),
   name: text('name').notNull().unique(),
+});
+
+// Orders table
+export const orders = pgTable("dyiflowershop_orders", {
+  id: serial("id").primaryKey(),
+  user_email: varchar("user_email", { length: 256 }).notNull(),
+  total_price: real("total_price").notNull(),
+  items: jsonb("items").notNull(),
+  status: varchar("status", { length: 50 }).notNull().default("pending"),
+  created_at: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  updated_at: timestamp("updated_at", { withTimezone: true })
 });

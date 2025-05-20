@@ -7,13 +7,13 @@ export function TopNav() {
             
             <div className="flex gap-4 list-none">
                 <div className="relative group">
-                    <a href="/Bouquet" className="text-white px-4 py-2 rounded hover:bg-gray-500">Shop</a>
+                    <a href="/Admin/Bouquet" className="text-white px-4 py-2 rounded hover:bg-gray-500">Shop</a>
                 </div>
                 <div className="relative group">
-                    <a href="/Flowers" className="text-white px-4 py-2 rounded hover:bg-gray-500">Flowers</a>
+                    <a href="/Admin/Flowers" className="text-white px-4 py-2 rounded hover:bg-gray-500">Flowers</a>
                 </div>
                 <div className="relative group">
-                    <a href="/Orders" className="text-white px-4 py-2 rounded hover:bg-gray-500">Orders</a>
+                    <a href="/Admin/Orders" className="text-white px-4 py-2 rounded hover:bg-gray-500">Orders</a>
                 </div>
             </div>
 

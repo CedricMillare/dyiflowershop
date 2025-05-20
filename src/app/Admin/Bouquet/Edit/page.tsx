@@ -1,7 +1,7 @@
 'use client';
 import { useEffect, useState } from "react";
-import { type Row, bouquetRows } from "../../bouquetRows";
-import { inventory } from "../../inventory";
+import { type Row, bouquetRows } from "../../../bouquetRows";
+import { inventory } from "../../../inventory";
 import { UploadDialog } from "../../_components/uploadDialog";
 import { useSearchParams } from "next/navigation";
 

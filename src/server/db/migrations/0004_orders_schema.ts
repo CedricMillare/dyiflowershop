@@ -1,18 +1,7 @@
-import { drizzle } from "drizzle-orm/neon-http";
-import { neon } from "@neondatabase/serverless";
-import { config } from "dotenv";
 import { sql } from "drizzle-orm";
+import { db } from "../index";
 
-config({ path: ".env" });
-
-if (!process.env.DATABASE_URL) {
-  throw new Error("DATABASE_URL is not set in environment variables");
-}
-
-const sqlClient = neon(process.env.DATABASE_URL);
-const db = drizzle(sqlClient);
-
-async function migrate() {
+export async function up() {
   try {
     console.log("Creating orders table...");
     await db.execute(sql`
@@ -27,11 +16,19 @@ async function migrate() {
       );
     `);
     console.log("Orders table created successfully!");
-    process.exit(0);
   } catch (error) {
-    console.error("Migration failed:", error);
-    process.exit(1);
+    console.error("Error creating orders table:", error);
+    throw error;
   }
 }
 
-migrate(); 
+export async function down() {
+  try {
+    console.log("Dropping orders table...");
+    await db.execute(sql`DROP TABLE IF EXISTS dyiflowershop_orders;`);
+    console.log("Orders table dropped successfully!");
+  } catch (error) {
+    console.error("Error dropping orders table:", error);
+    throw error;
+  }
+} 

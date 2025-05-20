@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from "react";
-import { type Bouquet, type Row, bouquetRows } from "./bouquetRows";
+import { type Bouquet, type Row, bouquetRows } from "../bouquetRows";
 
 export default function BouquetPage() {
   const [rows, updateRows] = useState<Row[] | null>(null); // Defer rendering until mounted

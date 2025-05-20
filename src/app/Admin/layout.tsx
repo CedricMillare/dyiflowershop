@@ -2,7 +2,10 @@ import "~/styles/globals.css";
 
 import { type Metadata } from "next";
 import { Geist } from "next/font/google";
+import { TopNav } from "./_components/topnav";
+import { Footer } from "./_components/footer";
 import { ClerkProvider } from "@clerk/nextjs";
+import { CartProvider } from "../context/CartContext";
 
 export const metadata: Metadata = {
   title: "Lcarpio's Flower Shop",
@@ -21,10 +24,16 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${geist.variable}`}>
       <body>
-        <ClerkProvider>
-          {children}
-        </ClerkProvider>
+        <div id="app">
+          <ClerkProvider>
+            <CartProvider>
+              <TopNav />
+              {children}
+              <Footer />
+            </CartProvider>
+          </ClerkProvider>
+        </div>
       </body>
     </html>
   );
-} 
+}

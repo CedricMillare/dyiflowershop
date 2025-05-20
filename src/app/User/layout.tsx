@@ -2,7 +2,10 @@ import "~/styles/globals.css";
 
 import { type Metadata } from "next";
 import { Geist } from "next/font/google";
-import { ClerkProvider } from "@clerk/nextjs";
+import { Header } from "./_components/header";
+import { TopNav } from "./_components/topnav";
+import { Footer } from "./_components/footer";
+import { CartProvider } from "~/app/context/CartContext";
 
 export const metadata: Metadata = {
   title: "Lcarpio's Flower Shop",
@@ -15,16 +18,17 @@ const geist = Geist({
   variable: "--font-geist-sans",
 });
 
-export default function RootLayout({
+export default function UserLayout({
   children,
-}: Readonly<{ children: React.ReactNode }>) {
+}: {
+  children: React.ReactNode;
+}) {
   return (
-    <html lang="en" className={`${geist.variable}`}>
-      <body>
-        <ClerkProvider>
-          {children}
-        </ClerkProvider>
-      </body>
-    </html>
+    <CartProvider>
+      <Header />
+      <TopNav />
+      {children}
+      <Footer />
+    </CartProvider>
   );
-} 
+}

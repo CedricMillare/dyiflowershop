@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from "react";
-import { type Bouquet, type Row, bouquetRows } from "../bouquetRows";
+import { type Bouquet, type Row, bouquetRows } from "../../bouquetRows";
 
 export default function BouquetPage() {
   const [rows, updateRows] = useState<Row[] | null>(null); // Defer rendering until mounted
@@ -77,7 +77,7 @@ export default function BouquetPage() {
         ╳
       </button>
       <a 
-        href={bouquet.id ? `${window.location.href}/Edit?rowIndex=${rowIndex}&itemIndex=${bouquetIndex}` : '#'}
+        href={bouquet.id ? `/Admin/Bouquet/Edit?rowIndex=${rowIndex}&itemIndex=${bouquetIndex}` : '#'}
         onClick={(e) => {
           if (!bouquet.id) {
             e.preventDefault();
