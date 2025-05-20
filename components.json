@@ -6,7 +6,11 @@
   "tailwind": {
     "config": "",
     "css": "src/styles/globals.css",
+<<<<<<< HEAD
     "baseColor": "neutral",
+=======
+    "baseColor": "zinc",
+>>>>>>> refs/remotes/origin/main
     "cssVariables": true,
     "prefix": ""
   },

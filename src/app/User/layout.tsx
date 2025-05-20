@@ -5,6 +5,7 @@ import { Geist } from "next/font/google";
 import { TopNav } from "./_components/topnav";
 import { Header } from "./_components/header";
 import { Footer } from "./_components/footer";
+import { ClerkProvider } from "@clerk/nextjs";
 
 export const metadata: Metadata = {
   title: "Lcarpio's Flower Shop",
@@ -21,6 +22,7 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
+<<<<<<< HEAD:src/app/User/layout.tsx
     <html lang="en" className={`${geist.variable}`}>
       <body>
         <Header />
@@ -29,5 +31,16 @@ export default function RootLayout({
         <Footer />
       </body>
     </html>
+=======
+    <ClerkProvider>
+      <html lang="en" className={`${geist.variable}`}>
+        <body>
+          <TopNav />
+          {children}
+          <Footer />
+        </body>
+      </html>
+    </ClerkProvider>
+>>>>>>> refs/remotes/origin/main:src/app/layout.tsx
   );
 }
