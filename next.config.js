@@ -12,12 +12,9 @@ const config = {
     eslint: {
         ignoreDuringBuilds: true,
     },
-<<<<<<< HEAD
-=======
     images: {
         domains: ['utfs.io'],
     },
->>>>>>> 6b1f6d74b51cf09f37162d593ed52e813b60c4f5
 };
 
 export default config;

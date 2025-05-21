@@ -9,31 +9,22 @@ const services = [
     title: "Wedding Arrangements",
     image: "/Pictures/Wedding-Arrangement.jpg",
     description: "Bridal bouquets, venue decor & more.",
-<<<<<<< HEAD
     link: "/OurServices/wedding-details",
-=======
     link: "/User/OurServices/wedding-details",
->>>>>>> 6b1f6d74b51cf09f37162d593ed52e813b60c4f5
   },
   {
     title: "Funeral Arrangements",
     image: "/Pictures/Funeral-Arrangement.jpg",
     description: "Elegant floral tributes for farewells.",
-<<<<<<< HEAD
     link: "/OurServices/funeral-details",
-=======
     link: "/User/OurServices/funeral-details",
->>>>>>> 6b1f6d74b51cf09f37162d593ed52e813b60c4f5
   },
   {
     title: "Church Events",
     image: "/Pictures/Church-Arrangement.jpg",
     description: "Arrangements for religious ceremonies.",
-<<<<<<< HEAD
     link: "/OurServices/church-details",
-=======
     link: "/User/OurServices/church-details",
->>>>>>> 6b1f6d74b51cf09f37162d593ed52e813b60c4f5
   },
 ];
 

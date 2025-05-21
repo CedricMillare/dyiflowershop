@@ -6,11 +6,6 @@ import * as schema from "./schema";
 
 config({ path: ".env" }); // or .env.local
 
-<<<<<<< HEAD
-const sql = neon(process.env.DATABASE_URL!);
-export const db = drizzle(sql, { schema });
-
-=======
 // Ensure DATABASE_URL is available
 if (!process.env.DATABASE_URL) {
   throw new Error("DATABASE_URL is not set in environment variables");
@@ -32,7 +27,6 @@ async function testConnection() {
 
 testConnection();
 
->>>>>>> 6b1f6d74b51cf09f37162d593ed52e813b60c4f5
 
 
 
