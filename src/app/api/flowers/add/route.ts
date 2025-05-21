@@ -2,6 +2,10 @@ import { db } from "~/server/db";
 import { flowers } from "~/server/db/schema";
 import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
+<<<<<<< HEAD
+=======
+import { eq } from "drizzle-orm";
+>>>>>>> 6b1f6d74b51cf09f37162d593ed52e813b60c4f5
 
 export async function POST(req: Request) {
   try {
@@ -18,12 +22,32 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Invalid flower data' }, { status: 400 });
     }
 
+<<<<<<< HEAD
     await db.insert(flowers).values({
       name: body.name,
       quantity: body.quantity,
     });
 
     return NextResponse.json({ message: "Flower added successfully" });
+=======
+    // First, try to get the existing flower
+    const existingFlower = await db.select().from(flowers).where(eq(flowers.name, body.name));
+
+    if (existingFlower.length > 0) {
+      // If flower exists, update its quantity
+      await db.update(flowers)
+        .set({ quantity: existingFlower[0].quantity + body.quantity })
+        .where(eq(flowers.name, body.name));
+    } else {
+      // If flower doesn't exist, insert new record
+      await db.insert(flowers).values({
+        name: body.name,
+        quantity: body.quantity,
+      });
+    }
+
+    return NextResponse.json({ message: "Flower updated successfully" });
+>>>>>>> 6b1f6d74b51cf09f37162d593ed52e813b60c4f5
   } catch (error) {
     console.error('Error adding flower:', error);
     return NextResponse.json({ error: 'Failed to add flower' }, { status: 500 });

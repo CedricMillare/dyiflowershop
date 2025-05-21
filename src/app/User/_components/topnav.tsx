@@ -3,6 +3,7 @@ export function TopNav() {
     <nav className="bg-green-300 py-6">
       <ul className="text-m flex justify-center space-x-9 font-bold text-gray-800">
         <li className="hover:underline">
+<<<<<<< HEAD
           <a href={"/Home"}>HOME</a>
         </li>
         <li className="hover:underline">
@@ -16,9 +17,27 @@ export function TopNav() {
         </li>
         <li className="hover:underline">
           <a href={"/Contacts"}>CONTACTS</a>
+=======
+          <a href="/User/Home">HOME</a>
+        </li>
+        <li className="hover:underline">
+          <a href="/User/Shop">SHOP</a>
+        </li>
+        <li className="hover:underline">
+          <a href="/User/OurServices">SERVICES</a>
+        </li>
+        <li className="hover:underline">
+          <a href="/User/Flowers">FLOWERS</a>
+        </li>
+        <li className="hover:underline">
+          <a href="/User/Contacts">CONTACTS</a>
+>>>>>>> 6b1f6d74b51cf09f37162d593ed52e813b60c4f5
         </li>
       </ul>
     </nav>
   );
+<<<<<<< HEAD
   s;
+=======
+>>>>>>> 6b1f6d74b51cf09f37162d593ed52e813b60c4f5
 }
