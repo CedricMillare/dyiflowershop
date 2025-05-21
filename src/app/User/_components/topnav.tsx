@@ -3,29 +3,16 @@ export function TopNav() {
     <nav className="bg-green-300 py-6">
       <ul className="text-m flex justify-center space-x-9 font-bold text-gray-800">
         <li className="hover:underline">
-          <a href={"/Home"}>HOME</a>
+          <a href={"/User/"}>HOME</a>
         </li>
         <li className="hover:underline">
-          <a href={"/Shop"}>SHOP</a>
+          <a href={"/User/Shop"}>SHOP</a>
         </li>
         <li className="hover:underline">
-          <a href={"/OurServices"}>SERVICES</a>
+          <a href={"/User/"}>SERVICES</a>
         </li>
         <li className="hover:underline">
-          <a href={"/Flowers"}>FLOWERS</a>
-        </li>
-        <li className="hover:underline">
-          <a href={"/Contacts"}>CONTACTS</a>
-          <a href="/User/Home">HOME</a>
-        </li>
-        <li className="hover:underline">
-          <a href="/User/Shop">SHOP</a>
-        </li>
-        <li className="hover:underline">
-          <a href="/User/OurServices">SERVICES</a>
-        </li>
-        <li className="hover:underline">
-          <a href="/User/Flowers">FLOWERS</a>
+          <a href={"/User/Flowers"}>FLOWERS</a>
         </li>
         <li className="hover:underline">
           <a href="/User/Contacts">CONTACTS</a>

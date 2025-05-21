@@ -12,15 +12,9 @@ export default function Contact() {
       >
         <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/40 px-4 text-center">
           <h1 className="mb-4 text-4xl font-bold text-white md:text-5xl">
-<<<<<<< HEAD
-            Contacts
-          </h1>
-          <p className="text-m text-white md:text-base">Home / Contacts</p>
-=======
             Shop
           </h1>
           <p className="text-m text-white md:text-base">Home / Shop</p>
->>>>>>> 6b1f6d74b51cf09f37162d593ed52e813b60c4f5
         </div>
       </section>
 
