@@ -14,7 +14,11 @@ export default function CheckoutPage() {
       >
         <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/40 px-4 text-center">
           <h1 className="mb-4 text-4xl font-bold text-white md:text-5xl">
+<<<<<<< HEAD
+            Checkout
+=======
             Check Out
+>>>>>>> 6b1f6d74b51cf09f37162d593ed52e813b60c4f5
           </h1>
           <p className="text-m text-white md:text-base">Home / Checkout</p>
         </div>

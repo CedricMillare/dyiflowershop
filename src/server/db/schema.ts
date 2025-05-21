@@ -1,5 +1,9 @@
 import { sql } from "drizzle-orm";
+<<<<<<< HEAD
+import { index, pgTableCreator, integer, varchar, real, timestamp, primaryKey, pgTable, serial, text } from "drizzle-orm/pg-core";
+=======
 import { index, pgTableCreator, integer, varchar, real, timestamp, primaryKey, pgTable, serial, text, jsonb } from "drizzle-orm/pg-core";
+>>>>>>> 6b1f6d74b51cf09f37162d593ed52e813b60c4f5
 
 export const createTable = pgTableCreator((name) => `dyiflowershop_${name}`);
 
@@ -48,6 +52,8 @@ export const consumables = pgTable('consumables', {
   id: serial('id').primaryKey(),
   name: text('name').notNull().unique(),
 });
+<<<<<<< HEAD
+=======
 
 // Orders table
 export const orders = pgTable("dyiflowershop_orders", {
@@ -59,3 +65,4 @@ export const orders = pgTable("dyiflowershop_orders", {
   created_at: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
   updated_at: timestamp("updated_at", { withTimezone: true })
 });
+>>>>>>> 6b1f6d74b51cf09f37162d593ed52e813b60c4f5

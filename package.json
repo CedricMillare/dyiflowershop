@@ -18,10 +18,22 @@
     "lint:fix": "next lint --fix",
     "preview": "next build && next start",
     "start": "next start",
+<<<<<<< HEAD
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+<<<<<<< HEAD
+    "@radix-ui/react-slot": "^1.2.2",
+    "@t3-oss/env-nextjs": "^0.12.0",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+=======
+=======
     "typecheck": "tsc --noEmit",
     "migrate:orders": "tsx src/server/db/migrate.ts"
   },
   "dependencies": {
+>>>>>>> 6b1f6d74b51cf09f37162d593ed52e813b60c4f5
     "@clerk/nextjs": "^6.19.4",
     "@hookform/resolvers": "^5.0.1",
     "@neondatabase/serverless": "^1.0.0",
@@ -33,16 +45,30 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "dotenv": "^16.5.0",
+<<<<<<< HEAD
+>>>>>>> refs/remotes/origin/main
+=======
+>>>>>>> 6b1f6d74b51cf09f37162d593ed52e813b60c4f5
     "drizzle-orm": "^0.41.0",
     "lucide-react": "^0.511.0",
     "next": "^15.2.3",
     "postgres": "^3.4.4",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+<<<<<<< HEAD
+<<<<<<< HEAD
+    "tailwind-merge": "^3.3.0",
+=======
+=======
+>>>>>>> 6b1f6d74b51cf09f37162d593ed52e813b60c4f5
     "react-hook-form": "^7.56.4",
     "sonner": "^2.0.3",
     "tailwind-merge": "^3.3.0",
     "uploadthing": "^7.7.2",
+<<<<<<< HEAD
+>>>>>>> refs/remotes/origin/main
+=======
+>>>>>>> 6b1f6d74b51cf09f37162d593ed52e813b60c4f5
     "zod": "^3.24.2"
   },
   "devDependencies": {
@@ -59,7 +85,14 @@
     "prettier": "^3.5.3",
     "prettier-plugin-tailwindcss": "^0.6.11",
     "tailwindcss": "^4.0.15",
+<<<<<<< HEAD
+<<<<<<< HEAD
+=======
     "tsx": "^4.19.4",
+>>>>>>> refs/remotes/origin/main
+=======
+    "tsx": "^4.19.4",
+>>>>>>> 6b1f6d74b51cf09f37162d593ed52e813b60c4f5
     "tw-animate-css": "^1.3.0",
     "typescript": "^5.8.2",
     "typescript-eslint": "^8.27.0"

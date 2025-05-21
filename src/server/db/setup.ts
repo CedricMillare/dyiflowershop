@@ -2,8 +2,11 @@ import { readFileSync } from 'fs';
 import { join } from 'path';
 import postgres from 'postgres';
 import { env } from '~/env';
+<<<<<<< HEAD
+=======
 import { db } from "./index";
 import { orders } from "./schema";
+>>>>>>> 6b1f6d74b51cf09f37162d593ed52e813b60c4f5
 
 const setupDatabase = async () => {
   const sql = postgres(env.DATABASE_URL);
@@ -44,6 +47,8 @@ const setupDatabase = async () => {
   }
 };
 
+<<<<<<< HEAD
+=======
 async function main() {
   try {
     console.log("Creating orders table...");
@@ -65,10 +70,15 @@ async function main() {
   }
 }
 
+>>>>>>> 6b1f6d74b51cf09f37162d593ed52e813b60c4f5
 setupDatabase().catch((err) => {
   console.error('Setup failed!');
   console.error(err);
   process.exit(1);
+<<<<<<< HEAD
+}); 
+=======
 });
 
 main(); 
+>>>>>>> 6b1f6d74b51cf09f37162d593ed52e813b60c4f5

@@ -2,11 +2,18 @@ import "~/styles/globals.css";
 
 import { type Metadata } from "next";
 import { Geist } from "next/font/google";
+<<<<<<< HEAD
+import { TopNav } from "./_components/topnav";
+import { Header } from "./_components/header";
+import { Footer } from "./_components/footer";
+import { ClerkProvider } from "@clerk/nextjs";
+=======
 import { Header } from "./_components/header";
 import { TopNav } from "./_components/topnav";
 import { Footer } from "./_components/footer";
 import { CartProvider } from "~/app/context/CartContext";
 import { SignOutButton } from "@clerk/nextjs";
+>>>>>>> 6b1f6d74b51cf09f37162d593ed52e813b60c4f5
 
 export const metadata: Metadata = {
   title: "Lcarpio's Flower Shop",
@@ -19,6 +26,32 @@ const geist = Geist({
   variable: "--font-geist-sans",
 });
 
+<<<<<<< HEAD
+export default function RootLayout({
+  children,
+}: Readonly<{ children: React.ReactNode }>) {
+  return (
+<<<<<<< HEAD:src/app/User/layout.tsx
+    <html lang="en" className={`${geist.variable}`}>
+      <body>
+        <Header />
+        <TopNav />
+        {children}
+        <Footer />
+      </body>
+    </html>
+=======
+    <ClerkProvider>
+      <html lang="en" className={`${geist.variable}`}>
+        <body>
+          <TopNav />
+          {children}
+          <Footer />
+        </body>
+      </html>
+    </ClerkProvider>
+>>>>>>> refs/remotes/origin/main:src/app/layout.tsx
+=======
 export default function UserLayout({
   children,
 }: {
@@ -40,5 +73,6 @@ export default function UserLayout({
         <Footer />
       </div>
     </CartProvider>
+>>>>>>> 6b1f6d74b51cf09f37162d593ed52e813b60c4f5
   );
 }

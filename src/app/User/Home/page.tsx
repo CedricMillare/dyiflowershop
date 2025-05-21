@@ -12,7 +12,11 @@ export default function HomePage() {
           <h1 className="mb-6 text-4xl font-bold text-white md:text-6xl">
             Gorgeous Flowers for Your Special Event
           </h1>
+<<<<<<< HEAD
+          <a href={"/Shop"}>
+=======
           <a href="/User/Shop">
+>>>>>>> 6b1f6d74b51cf09f37162d593ed52e813b60c4f5
             <Button className="rounded bg-[#f6a29d] px-6 py-3 font-semibold text-white hover:bg-[#e69087]">
               Shop Now
             </Button>

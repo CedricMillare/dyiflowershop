@@ -53,7 +53,11 @@ export default function FuneralPage() {
             style={{ backgroundImage: 'url("/Pictures/Funeral-designs.jpg")' }}
           >
             <div className="absolute inset-0 flex items-center justify-center rounded bg-black/40">
+<<<<<<< HEAD
+              <a href="/Contacts">
+=======
               <a href="/User/Contacts">
+>>>>>>> 6b1f6d74b51cf09f37162d593ed52e813b60c4f5
                 <button className="bg-opacity-70 hover:bg-opacity-90 rounded bg-gray-700 px-6 py-3 font-semibold text-white shadow-lg hover:bg-gray-800">
                   Contact Us for Funeral Services
                 </button>
