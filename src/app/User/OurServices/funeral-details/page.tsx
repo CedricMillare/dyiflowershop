@@ -1,4 +1,5 @@
-import React from "react";
+// import React is not required in Next.js with React 17+
+import Image from "next/image";
 
 export default function FuneralPage() {
   return (
@@ -12,7 +13,7 @@ export default function FuneralPage() {
           <h1 className="mb-4 text-4xl font-bold text-white md:text-5xl">
             Funeral Arrangements
           </h1>
-          <p className="text-m text-white md:text-base">
+          <p className="text-sm text-white md:text-base">
             Home / Services / Funeral Arrangements
           </p>
         </div>
@@ -28,11 +29,14 @@ export default function FuneralPage() {
           </p>
         </div>
 
-        <div className="flex flex-col items-center gap-8 md:flex-row">
-          <img
+        <div className="flex flex-col md:flex-row items-center gap-8">
+          <Image
             src="/Pictures/Funeral-Arrangement.jpg"
             alt="Funeral Flowers"
             className="w-full rounded shadow-md md:w-1/2"
+            width={600}
+            height={400}
+            style={{ objectFit: "cover" }}
           />
           <div className="space-y-4 text-gray-700">
             <p>
@@ -53,14 +57,11 @@ export default function FuneralPage() {
             style={{ backgroundImage: 'url("/Pictures/Funeral-designs.jpg")' }}
           >
             <div className="absolute inset-0 flex items-center justify-center rounded bg-black/40">
-<<<<<<< HEAD
-              <a href="/Contacts">
-=======
-              <a href="/User/Contacts">
->>>>>>> 6b1f6d74b51cf09f37162d593ed52e813b60c4f5
-                <button className="bg-opacity-70 hover:bg-opacity-90 rounded bg-gray-700 px-6 py-3 font-semibold text-white shadow-lg hover:bg-gray-800">
-                  Contact Us for Funeral Services
-                </button>
+              <a
+                href="/User/Contacts"
+                className="bg-opacity-70 hover:bg-opacity-90 rounded bg-gray-700 px-6 py-3 font-semibold text-white shadow-lg hover:bg-gray-800 inline-block text-center"
+              >
+                Contact Us for Funeral Services
               </a>
             </div>
           </div>
