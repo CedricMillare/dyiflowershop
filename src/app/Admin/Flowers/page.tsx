@@ -88,15 +88,15 @@ export default function FlowersPage() {
         <h1 className="text-3xl font-bold mb-8">Flower Management</h1>
         
         {/* Add new flower form */}
-        <div className="bg-white p-6 rounded-lg shadow-md mb-8">
-          <h2 className="text-xl font-semibold mb-4">Add New Flower</h2>
+        <div className="bg-gray-500 p-6 rounded-lg shadow-md mb-8">
+          <h2 className="text-white text-xl font-semibold mb-4">Add New Flower</h2>
           <div className="flex gap-4">
             <input
               type="text"
               value={newFlower.name}
               onChange={(e) => setNewFlower({ ...newFlower, name: e.target.value })}
               placeholder="Flower name"
-              className="flex-1 p-2 border rounded"
+              className="flex-1 p-2 border rounded bg-white"
             />
             <input
               type="number"
@@ -104,11 +104,11 @@ export default function FlowersPage() {
               onChange={(e) => setNewFlower({ ...newFlower, quantity: Number(e.target.value) })}
               placeholder="Quantity"
               min="0"
-              className="w-32 p-2 border rounded"
+              className="w-32 p-2 border rounded bg-white"
             />
             <button
               onClick={addFlower}
-              className="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded"
+              className="bg-gray-700 hover:bg-green-800 text-white font-semibold py-2 px-4 rounded"
             >
               Add Flower
             </button>
@@ -116,13 +116,13 @@ export default function FlowersPage() {
         </div>
 
         {/* Flower list */}
-        <div className="bg-white p-6 rounded-lg shadow-md">
-          <h2 className="text-xl font-semibold mb-4">Flower List</h2>
+        <div className="bg-gray-500 p-6 rounded-lg shadow-md">
+          <h2 className="text-white text-xl font-semibold mb-4">Flower List</h2>
           <div className="space-y-4">
             {flowerList.map((flower) => (
               <div
                 key={flower.name}
-                className="flex items-center justify-between p-4 border rounded hover:bg-gray-50"
+                className="bg-white flex items-center justify-between p-4 border rounded hover:bg-gray-50"
               >
                 <div>
                   <h3 className="font-medium">{flower.name}</h3>
@@ -130,7 +130,7 @@ export default function FlowersPage() {
                 </div>
                 <button
                   onClick={() => deleteFlower(flower.name)}
-                  className="text-red-600 hover:text-red-800"
+                  className="bg-gray-700 hover:bg-green-800 text-white font-semibold py-2 px-4 rounded"
                 >
                   Delete
                 </button>

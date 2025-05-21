@@ -64,7 +64,7 @@ export default function BouquetPage() {
       className="relative border border-gray-300 rounded-lg shadow-sm hover:shadow-md transition cursor-pointer bg-white"
     >
       <button
-        className="bg-gray-700 absolute p-1 right-0 font-bold"
+        className="absolute top-2 right-2 text-white bg-black/40 hover:bg-black/70 rounded-full w-8 h-8 flex items-center justify-center text-lg font-bold"
         onClick={() => {
           const newRows = [...(bouquetRows.value || [])];
           const index = newRows[rowIndex]?.items?.indexOf(bouquet);
@@ -74,7 +74,7 @@ export default function BouquetPage() {
           bouquetRows.set(newRows);
         }}
       >
-        ╳
+        ×
       </button>
       <a 
         href={bouquet.id ? `/Admin/Bouquet/Edit?rowIndex=${rowIndex}&itemIndex=${bouquetIndex}` : '#'}
@@ -282,7 +282,7 @@ export default function BouquetPage() {
               alert(err instanceof Error ? err.message : "Failed to save bouquets to database");
             }
           }}
-          className="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded w-auto"
+          className="bg-gray-700 hover:bg-gray-800 text-white font-semibold py-2 px-4 rounded w-auto"
         >
           Save to DB
         </button>
@@ -305,7 +305,7 @@ export default function BouquetPage() {
               alert("Failed to load bouquets from server");
             }
           }}
-          className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded w-auto"
+          className="bg-gray-700 hover:bg-gray-800 text-white font-semibold py-2 px-4 rounded w-auto"
         >
           Load from DB
         </button>

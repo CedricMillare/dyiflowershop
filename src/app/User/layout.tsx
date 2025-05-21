@@ -6,6 +6,7 @@ import { Header } from "./_components/header";
 import { TopNav } from "./_components/topnav";
 import { Footer } from "./_components/footer";
 import { CartProvider } from "~/app/context/CartContext";
+import { SignOutButton } from "@clerk/nextjs";
 
 export const metadata: Metadata = {
   title: "Lcarpio's Flower Shop",
@@ -25,10 +26,19 @@ export default function UserLayout({
 }) {
   return (
     <CartProvider>
-      <Header />
-      <TopNav />
-      {children}
-      <Footer />
+      <div className="relative min-h-screen">
+        <Header />
+        <TopNav />
+        <div className="absolute right-4 top-[120px] z-50">
+          <SignOutButton>
+            <button className="rounded-md bg-red-500 px-4 py-2 text-sm font-semibold text-white hover:bg-red-600">
+              Sign Out
+            </button>
+          </SignOutButton>
+        </div>
+        {children}
+        <Footer />
+      </div>
     </CartProvider>
   );
 }
