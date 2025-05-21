@@ -1,4 +1,4 @@
-import React from "react";
+import Image from "next/image";
 
 export default function WeddingPage() {
   return (
@@ -12,61 +12,58 @@ export default function WeddingPage() {
           <h1 className="mb-4 text-4xl font-bold text-white md:text-5xl">
             Wedding Arrangements
           </h1>
-          <p className="text-m text-white md:text-base">
-            Home / Services / Wedding Arrangements
-          </p>
+          <p className="text-base text-white">Home / Services / Wedding Arrangements</p>
         </div>
       </section>
 
-      <div className="mx-auto max-w-5xl space-y-12 px-4 py-12">
+      <section className="mx-auto max-w-5xl space-y-12 px-4 py-12">
         <div className="text-center">
-          <h1 className="text-2xl font-semibold tracking-widest uppercase">
+          <h2 className="text-2xl font-semibold tracking-widest uppercase">
             Wedding Arrangements
-          </h1>
+          </h2>
           <p className="mt-4 text-gray-600">
-            Elegant and customized floral arrangements designed for weddings to
-            make your day extra special.
+            Elegant and customized floral arrangements designed for weddings to make your day extra special.
           </p>
         </div>
 
         <div className="flex flex-col items-center gap-8 md:flex-row">
-          <img
-            src="/Pictures/Wedding-Arrangement.jpg"
-            alt="Wedding Flowers"
-            className="w-full rounded shadow-md md:w-1/2"
-          />
+          <div className="w-full md:w-1/2">
+            <Image
+              src="/Pictures/Wedding-Arrangement.jpg"
+              alt="Elegant wedding flower arrangement"
+              width={600}
+              height={400}
+              className="w-full rounded shadow-md object-cover"
+              loading="lazy"
+            />
+          </div>
           <div className="space-y-4 text-gray-700">
             <p>
-              From bouquets to centerpieces, our wedding arrangements are
-              crafted with passion and attention to detail.
+              From bouquets to centerpieces, our wedding arrangements are crafted with passion and attention to detail.
             </p>
             <p>
-              Choose from a variety of blooms and styles to match your wedding
-              theme and bring your dream vision to life.
+              Choose from a variety of blooms and styles to match your wedding theme and bring your dream vision to life.
             </p>
           </div>
         </div>
 
-        {/* Contact Section (Mini Hero Style) */}
+        {/* Contact Section */}
         <div className="flex justify-center">
           <div
-            className="relative h-[200px] w-full rounded bg-cover bg-center shadow-md md:w-[100%]"
+            className="relative h-[200px] w-full rounded bg-cover bg-center shadow-md"
             style={{ backgroundImage: 'url("/Pictures/Wedding-designs.jpg")' }}
           >
             <div className="absolute inset-0 flex items-center justify-center rounded bg-black/40">
-<<<<<<< HEAD
-              <a href="/Contacts">
-=======
-              <a href="/User/Contacts">
->>>>>>> 6b1f6d74b51cf09f37162d593ed52e813b60c4f5
-                <button className="bg-opacity-70 hover:bg-opacity-90 rounded bg-pink-600 px-6 py-3 font-semibold text-white shadow-lg hover:bg-pink-700">
-                  Contact Us for Wedding Services
-                </button>
+              <a
+                href="/User/Contacts"
+                className="inline-block rounded bg-pink-600 px-6 py-3 text-center font-semibold text-white shadow-lg transition-opacity duration-300 hover:bg-pink-700 hover:bg-opacity-90"
+              >
+                Contact Us for Wedding Services
               </a>
             </div>
           </div>
         </div>
-      </div>
+      </section>
     </>
   );
 }
