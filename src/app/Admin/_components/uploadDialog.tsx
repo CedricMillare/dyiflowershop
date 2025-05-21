@@ -136,7 +136,7 @@ export function UploadDialog({ onImageUpload }: { onImageUpload?: (imageUrl: str
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline">Upload Image</Button>
+        <Button variant="outline" className="bg-zinc-600 font-semibold">Upload Image</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>

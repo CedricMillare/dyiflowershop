@@ -2,18 +2,12 @@ import "~/styles/globals.css";
 
 import { type Metadata } from "next";
 import { Geist } from "next/font/google";
-<<<<<<< HEAD
 import { TopNav } from "./_components/topnav";
 import { Header } from "./_components/header";
 import { Footer } from "./_components/footer";
 import { ClerkProvider } from "@clerk/nextjs";
-=======
-import { Header } from "./_components/header";
-import { TopNav } from "./_components/topnav";
-import { Footer } from "./_components/footer";
 import { CartProvider } from "~/app/context/CartContext";
 import { SignOutButton } from "@clerk/nextjs";
->>>>>>> 6b1f6d74b51cf09f37162d593ed52e813b60c4f5
 
 export const metadata: Metadata = {
   title: "Lcarpio's Flower Shop",
@@ -26,53 +20,30 @@ const geist = Geist({
   variable: "--font-geist-sans",
 });
 
-<<<<<<< HEAD
 export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-<<<<<<< HEAD:src/app/User/layout.tsx
-    <html lang="en" className={`${geist.variable}`}>
-      <body>
-        <Header />
-        <TopNav />
-        {children}
-        <Footer />
-      </body>
-    </html>
-=======
     <ClerkProvider>
-      <html lang="en" className={`${geist.variable}`}>
-        <body>
-          <TopNav />
-          {children}
-          <Footer />
-        </body>
-      </html>
+      <CartProvider>
+        <html lang="en" className={`${geist.variable}`}>
+          <body>
+            <div className="relative min-h-screen">
+              <Header />
+              <TopNav />
+              <div className="absolute right-4 top-[120px] z-50">
+                <SignOutButton>
+                  <button className="rounded-md bg-red-500 px-4 py-2 text-sm font-semibold text-white hover:bg-red-600">
+                    Sign Out
+                  </button>
+                </SignOutButton>
+              </div>
+              {children}
+              <Footer />
+            </div>
+          </body>
+        </html>
+      </CartProvider>
     </ClerkProvider>
->>>>>>> refs/remotes/origin/main:src/app/layout.tsx
-=======
-export default function UserLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  return (
-    <CartProvider>
-      <div className="relative min-h-screen">
-        <Header />
-        <TopNav />
-        <div className="absolute right-4 top-[120px] z-50">
-          <SignOutButton>
-            <button className="rounded-md bg-red-500 px-4 py-2 text-sm font-semibold text-white hover:bg-red-600">
-              Sign Out
-            </button>
-          </SignOutButton>
-        </div>
-        {children}
-        <Footer />
-      </div>
-    </CartProvider>
->>>>>>> 6b1f6d74b51cf09f37162d593ed52e813b60c4f5
   );
 }
