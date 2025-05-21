@@ -76,6 +76,7 @@ export default function EditPage() {
         setTempConsumables(data.consumables || []);
         setSelectedFlower(Object.keys(inventory.flowers)[0] ?? null);
         setSelectedConsumable(inventory.consumables[0] ?? null);
+        setChecked(!!data.doNotDisplay);
       } catch (err) {
         console.error("Error loading bouquet:", err);
         alert("Failed to load bouquet data");
